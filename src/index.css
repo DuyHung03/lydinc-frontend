@@ -1,6 +1,6 @@
-/* @import '@mantine/core/styles.css'; */
-/* @import 'react-slideshow-image/dist/styles.css'; */
+@import '@mantine/core/styles.css';
 @import 'react-toastify/dist/ReactToastify.css';
+@import 'react-responsive-carousel/lib/styles/carousel.min.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,6 +92,7 @@ video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -106,9 +107,6 @@ menu,
 nav,
 section {
     display: block;
-}
-body {
-    line-height: 1;
 }
 ol,
 ul {
@@ -140,4 +138,23 @@ body {
 
 b {
     font-weight: 500;
+}
+
+@layer components {
+    .primary-btn {
+        @apply bg-gradient-to-t from-primary to-primary text-white px-4 py-2 rounded-xl cursor-pointer text-center;
+    }
+    .primary-btn:hover {
+        @apply bg-slate-500 text-white duration-150;
+    }
+}
+
+@layer components {
+    .menu-header-item {
+        @apply text-gray-900 text-lg p-4 font-semibold cursor-pointer;
+    }
+
+    .menu-header-item:hover {
+        @apply text-primary duration-150 underline;
+    }
 }

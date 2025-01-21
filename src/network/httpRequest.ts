@@ -1,8 +1,7 @@
 import axios from 'axios';
 import useAuthStore from '../store/useAuthStore';
-import useUserStore from '../store/useUserStore';
 
-const baseURL = import.meta.env.BASE_URL;
+const baseURL = import.meta.env.VITE_API_URL as string;
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
@@ -12,11 +11,11 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
+const { logout } = useAuthStore.getState();
+
 const handleAuthorizationError = () => {
-    const { clearUser } = useUserStore.getState();
-    const { logout } = useAuthStore.getState();
-    clearUser();
     logout();
+    window.location.replace('/login');
 };
 
 const refreshAccessToken = async () => {
@@ -42,11 +41,7 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (
-            error.response &&
-            (error.response.status === 401 || error.response.status === 403) &&
-            !originalRequest._retry
-        ) {
+        if (error.response && error.response.status === 403 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {

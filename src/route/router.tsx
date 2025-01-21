@@ -1,7 +1,12 @@
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom';
-import { publicRoutes } from './routes';
+import { adminRoutes, lecturerRoutes, publicRoutes, studentRoutes } from './routes';
 
-const routes: RouteObject[] = [...publicRoutes];
+const routes: RouteObject[] = [
+    ...publicRoutes,
+    ...lecturerRoutes,
+    ...studentRoutes,
+    ...adminRoutes,
+];
 
 const router = createBrowserRouter(routes);
 
