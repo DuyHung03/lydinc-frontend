@@ -1,5 +1,6 @@
+import { Add } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PageHeader from '../../component/page-header/PageHeader';
 import axiosInstance from '../../network/httpRequest';
 import { University, User } from '../../types/types';
@@ -49,38 +50,58 @@ function UniversityDetails() {
 
                 {/* Students Table */}
                 <div>
-                    <h2 className='text-xl font-semibold text-gray-800 mb-4'>{`Accounts (${students?.length})`}</h2>
+                    <div className='w-full flex items-center justify-between mb-3'>
+                        <h2 className='text-xl font-semibold text-gray-800 mb-4'>{`Accounts (${students?.length})`}</h2>
+                        <Link
+                            to={'/admin/new-user'}
+                            className='primary-btn flex items-center justify-center gap-2'
+                            state={university}
+                        >
+                            <Add fontSize='small' />
+                            <p>Add student</p>
+                        </Link>
+                    </div>
                     {isLoading && <p>Loading students...</p>}
                     {error && <p className='text-red-500'>Failed to load students.</p>}
                     {!isLoading && students && students.length > 0 && (
                         <table className='table-auto w-full border-collapse border border-gray-300'>
                             <thead>
                                 <tr className='bg-gray-200'>
-                                    <th className='border border-gray-300 px-4 py-2'>#</th>
-                                    <th className='border border-gray-300 px-4 py-2'>Username</th>
-                                    <th className='border border-gray-300 px-4 py-2'>User ID</th>
-                                    <th className='border border-gray-300 px-4 py-2'>Email</th>
-                                    <th className='border border-gray-300 px-4 py-2'>Phone</th>
-                                    <th className='border border-gray-300 px-4 py-2'>Gender</th>
+                                    <th className='border border-solid border-gray-300 px-4 py-2'>
+                                        #
+                                    </th>
+                                    <th className='border border-solid border-gray-300 px-4 py-2'>
+                                        Name
+                                    </th>
+                                    <th className='border border-solid border-gray-300 px-4 py-2'>
+                                        Username
+                                    </th>
+                                    <th className='border border-solid border-gray-300 px-4 py-2'>
+                                        Email
+                                    </th>
+                                    <th className='border border-solid border-gray-300 px-4 py-2'>
+                                        Phone
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {students.map((student, index) => (
                                     <tr key={student.userId} className='hover:bg-gray-100'>
-                                        <td className='border border-gray-300 px-4 py-2 text-center'>
+                                        <td className='border border-gray-300 border-solid px-4 py-2 text-center'>
                                             {index + 1}
                                         </td>
-                                        <td className='border text-center border-gray-300 px-4 py-2'>
+                                        <td className='border text-center border-gray-300 border-solid px-4 py-2'>
+                                            {student.name}
+                                        </td>
+                                        <td className='border text-center border-gray-300 border-solid px-4 py-2'>
                                             {student.username || 'N/A'}
                                         </td>
-                                        <td className='border text-center border-gray-300 px-4 py-2'>
-                                            {student.userId}
-                                        </td>
-                                        <td className='border text-center border-gray-300 px-4 py-2'>
+                                        <td className='border text-center border-gray-300 border-solid px-4 py-2'>
                                             {student.email || 'N/A'}
                                         </td>
-                                        <td className='border text-center border-gray-300 px-4 py-2'></td>
-                                        <td className='border text-center border-gray-300 px-4 py-2'></td>
+                                        <td className='border text-center border-gray-300 border-solid px-4 py-2'>
+                                            {student.phone}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

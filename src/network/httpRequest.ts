@@ -15,13 +15,12 @@ const { logout } = useAuthStore.getState();
 
 const handleAuthorizationError = () => {
     logout();
-    window.location.replace('/login');
 };
 
 const refreshAccessToken = async () => {
     try {
         await axios.post(
-            `${baseURL}/auth/refreshToken`,
+            `${baseURL}auth/refreshToken`,
             {},
             {
                 withCredentials: true,

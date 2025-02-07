@@ -54,8 +54,7 @@ function Footer() {
                 </div>
             </div>
             <div className='bg-gray-800 flex justify-center items-center py-6 text-white'>
-                Copyright belongs to <p className='italic'> LYDINC QA LEARNING </p> | Provided
-                LYDINC
+                Copyright belongs to LYDINC QA LEARNING | Provided LYDINC Company
             </div>
         </div>
     );

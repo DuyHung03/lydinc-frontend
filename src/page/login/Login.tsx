@@ -8,6 +8,7 @@ import { z } from 'zod';
 import logo from '../../assets/logo_2.png';
 import axiosInstance from '../../network/httpRequest';
 import useAuthStore from '../../store/useAuthStore';
+import { User } from '../../types/types';
 const loginSchema = z.object({
     username: z.string().min(4, 'Invalid username').default(''),
     password: z.string().min(4, 'Invalid password').default(''),
@@ -35,8 +36,13 @@ function Login() {
             const res = await axiosInstance.post('/auth/login', data);
 
             if (res.status === 200) {
-                console.log(res.data);
-                login(res.data.user);
+                const user: User = res.data.user;
+                if (user.isAccountGranted == 1 && user.isPasswordFirstChanged == 0) {
+                    login(user);
+                    window.location.replace('/change-password');
+                    return;
+                }
+                login(user);
                 window.location.replace('/');
             }
         } catch (error) {
@@ -77,7 +83,7 @@ function Login() {
                             required
                             aria-invalid={!!errors.username}
                             aria-describedby={errors.username ? 'username-error' : undefined}
-                            className='p-2 pr-10 border border-gray-300 rounded w-full focus:caret-primary focus:border-primary focus:border outline-none'
+                            className='p-2 pr-10 border border-gray-300 w-full focus:caret-primary focus:border-primary focus:border outline-none'
                             placeholder='Username'
                             type='text'
                         />
@@ -94,14 +100,14 @@ function Login() {
                             required
                             aria-invalid={!!errors.password}
                             aria-describedby={errors.password ? 'password-error' : undefined}
-                            className='p-2 pr-10 border border-gray-300 rounded w-full focus:caret-primary focus:border-primary focus:border outline-none'
+                            className='p-2 pr-10 border border-gray-300 w-full focus:caret-primary focus:border-primary focus:border outline-none'
                             placeholder='Password'
                             type={showPassword ? 'text' : 'password'}
                         />
                         <button
                             type='button'
                             onClick={() => setShowPassword(!showPassword)}
-                            className='absolute right-3 top-2'
+                            className='absolute right-3 top-1'
                             aria-label='Toggle password visibility'
                         >
                             {showPassword ? (
@@ -132,9 +138,7 @@ function Login() {
                         <button
                             type='submit'
                             disabled={loading}
-                            className={`p-3 ${
-                                loading ? 'bg-gray-500' : 'bg-primary'
-                            } text-white rounded`}
+                            className={`p-3 ${loading ? 'bg-gray-500' : 'bg-primary'} text-white`}
                         >
                             Login
                         </button>
@@ -142,7 +146,7 @@ function Login() {
                 </form>
             </div>
             <div className='relative w-full h-full'>
-                <video className='w-full h-screen object-cover rounded-l-3xl' autoPlay loop muted>
+                <video className='w-full h-screen object-cover-l-3xl' autoPlay loop muted>
                     <source
                         src='https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/Ch%C6%B0a%20c%C3%B3%20t%C3%AAn%20(1080%20x%201920%20px).mp4?alt=media&token=f0bd987c-8575-409b-993d-e65ac15037b5'
                         type='video/mp4'

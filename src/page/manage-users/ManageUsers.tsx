@@ -29,104 +29,124 @@ function ManageUsers() {
         placeholderData: keepPreviousData,
     });
 
-    if (isLoading) {
-        return (
-            <div className='w-full flex justify-center items-center h-64'>
-                <Loader color='blue' size='lg' />
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className='w-full flex justify-center items-center h-64'>
-                <Alert title='Error' color='red'>
-                    Failed to fetch users. Please try again later.
-                </Alert>
-            </div>
-        );
-    }
-
     return (
         <div className='w-full flex justify-center items-center'>
             <div className='w-1200 p-4'>
                 <PageHeader title='Manage Users' />
 
                 <div className='w-fit'>
-                    <Link to={'new-user'}>
+                    <Link to={'/admin/new-user'}>
                         <button className='primary-btn mb-5 flex gap-3 justify-center items-center'>
-                            <PersonAdd />
-                            <p>Add new account</p>
+                            <PersonAdd fontSize='small' />
+                            <p className='text-sm'>Create new account</p>
                         </button>
                     </Link>
                 </div>
 
-                {/* Users Table */}
-                <div className='w-full overflow-x-auto'>
-                    <table className='table-auto w-full'>
-                        <thead>
-                            <tr className='bg-gray-100'>
-                                <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
-                                    #
-                                </th>
-                                <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
-                                    Name
-                                </th>
-                                <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
-                                    Email
-                                </th>
-                                <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
-                                    Status
-                                </th>
-                                <th className='px-6 py-3 text-center text-sm font-semibold bg-gray-100'>
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data?.users?.map((user: User, index: number) => (
-                                <tr key={user.userId} className='hover:bg-gray-50'>
-                                    <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
-                                        {index + 1}
-                                    </td>
-                                    <td className='border-gray-300 border-r border-solid px-6 py-4 text-center flex justify-center items-center gap-3'>
-                                        <Tooltip
-                                            label={user.email}
-                                            transitionProps={{ duration: 200, enterDelay: 200 }}
-                                            color='gray'
-                                        >
-                                            <Avatar
-                                                src={user.photoUrl}
-                                                alt={user.username}
-                                                radius='xl'
-                                            />
-                                        </Tooltip>
-                                        <p className='text-sm'>{user.username}</p>
-                                    </td>
-                                    <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
-                                        {user.email}
-                                    </td>
-                                    <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
-                                        <Badge color='green'>Active</Badge>
-                                    </td>
-                                    <td className='border-gray-300 px-6 py-4 text-center text-sm align-middle'>
-                                        <button className='text-gray-600 hover:text-gray-900'>
-                                            View
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                {/* Pagination */}
-                <div className='w-full my-8 flex justify-center items-center'>
-                    <Pagination
-                        total={data?.total}
-                        onChange={(value) => setPageNo(value)}
-                        value={pageNo}
-                    />
-                </div>
+                {error && (
+                    <div className='w-full flex justify-center items-center h-64'>
+                        <Alert title='Error' color='red'>
+                            Failed to fetch users. Please try again later.
+                        </Alert>
+                    </div>
+                )}
+                {isLoading ? (
+                    <div className='w-full flex justify-center items-center h-64'>
+                        <Loader color='blue' size='lg' />
+                    </div>
+                ) : (
+                    <>
+                        {/* Users Table */}
+                        <div className='w-full overflow-x-auto'>
+                            <table className='table-auto w-full'>
+                                <thead>
+                                    <tr className='bg-gray-100'>
+                                        <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
+                                            #
+                                        </th>
+                                        <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
+                                            Username
+                                        </th>
+                                        <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
+                                            Fullname
+                                        </th>
+                                        <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
+                                            Email
+                                        </th>
+                                        <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
+                                            University
+                                        </th>
+                                        <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold'>
+                                            Status
+                                        </th>
+                                        <th className='px-6 py-3 text-center text-sm font-semibold bg-gray-100'>
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data?.users?.map((user: User, index: number) => (
+                                        <tr key={user.userId} className='hover:bg-gray-50'>
+                                            <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
+                                                {index + 1}
+                                            </td>
+                                            <td className='border-gray-300 border-r border-solid px-6 py-4 text-center flex justify-center items-center gap-3'>
+                                                <Avatar
+                                                    src={user.photoUrl}
+                                                    alt={user.username}
+                                                    radius='xl'
+                                                />
+                                                <Tooltip
+                                                    label={user.email}
+                                                    transitionProps={{
+                                                        duration: 200,
+                                                        enterDelay: 200,
+                                                    }}
+                                                    color='gray'
+                                                >
+                                                    <p className='text-sm'>{user.username}</p>
+                                                </Tooltip>
+                                            </td>
+                                            <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
+                                                {user.name}
+                                            </td>
+                                            <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
+                                                {user.email}
+                                            </td>
+                                            <Tooltip
+                                                label={user.university.fullName}
+                                                transitionProps={{ duration: 200, enterDelay: 200 }}
+                                                color='gray'
+                                            >
+                                                <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
+                                                    {user.university.shortName}
+                                                </td>
+                                            </Tooltip>
+                                            <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
+                                                <Badge color='green'>Active</Badge>
+                                            </td>
+                                            <td className='border-gray-300 px-6 py-4 text-center text-sm align-middle'>
+                                                <button className='text-gray-600 hover:text-gray-900'>
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {/* Pagination */}
+                        <div className='w-full my-8 flex justify-center items-center'>
+                            <Pagination
+                                color='#b39858'
+                                radius={'xs'}
+                                total={data?.total}
+                                onChange={(value) => setPageNo(value)}
+                                value={pageNo}
+                            />
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

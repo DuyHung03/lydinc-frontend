@@ -1,9 +1,13 @@
 export type User = {
     userId: string;
     email: string;
+    name: string;
     username: string;
     photoUrl: string;
-    school: string;
+    phone: string | null;
+    university: University;
+    isPasswordFirstChanged: number;
+    isAccountGranted: number;
     roles: string[];
 };
 
@@ -33,4 +37,29 @@ export type University = {
     logo: string | null;
     location: string | null;
     students: User[];
+};
+
+export type Module = {
+    moduleId: string;
+    index: number;
+    moduleTitle: string;
+    status: string;
+    level: number;
+    parentModuleId: string;
+};
+
+export type Lesson = {
+    lessonId: string;
+    lessonTitle: string;
+    lessonContent: string;
+    module: Module;
+};
+
+export type StudentAccount = {
+    username: string | null;
+    falcuty: string | null;
+    universityId: number | null;
+    shortName: string;
+    email: string;
+    phone: string;
 };

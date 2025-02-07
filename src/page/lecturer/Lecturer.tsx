@@ -1,5 +1,8 @@
+import { Divider, Loader } from '@mantine/core';
+import { Add } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import CourseItem from '../../component/course-item/CourseItem';
 import axiosInstance from '../../network/httpRequest';
 import useAuthStore from '../../store/useAuthStore';
 import { Course } from '../../types/types';
@@ -17,31 +20,45 @@ const Lecturer = () => {
         return res.data;
     };
 
-    const { data } = useQuery<Course[]>({
+    const { data: courses } = useQuery<Course[]>({
         queryKey: ['course'],
         queryFn: getCourseByLecturer,
+        gcTime: 300000,
     });
 
     return (
-        <div>
-            {data ? (
+        <div className='w-full flex justify-center items-center'>
+            <div className='w-1200 p-4'>
+                <h1 className='font-semibold mb-4 text-xl'>Recent courses ({courses?.length}):</h1>
+                <Divider w={'100%'} my={24} />
                 <div>
-                    {data.map((course: Course) => (
-                        <div key={course.courseId}>
-                            <Link to={`/lecturer/course/${course.courseId}`} state={{ course }}>
-                                <h2 className='m-3 p-3 rounded-md shadow-lg cursor-pointer w-fit text-white bg-primary'>
-                                    {course.title}
-                                </h2>
-                            </Link>
+                    {courses ? (
+                        <div className='w-full grid grid-cols-3 gap-7'>
+                            <div className='flex flex-col w-full justify-center items-center gap-1'>
+                                <Link to='/lecturer/new-course'>
+                                    <button className='p-14 border border-primary border-dashed hover:bg-gray-200 duration-150'>
+                                        <Add htmlColor='#b39858' style={{ fontSize: '46px' }} />
+                                    </button>
+                                    <p className='text-gray-700 text-center font-semibold'>
+                                        Create new course
+                                    </p>
+                                </Link>
+                            </div>
+                            {courses.map((course: Course) => (
+                                <div key={course.courseId} className='w-full '>
+                                    <Link to={`/lecturer/course/edit-course/${course.courseId}/`}>
+                                        <CourseItem course={course} />
+                                    </Link>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        <div className='w-full flex justify-center items-center'>
+                            <Loader />
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <p>Loading...</p>
-            )}
-            <Link to='/lecturer/new-course'>
-                <button>Create new course</button>
-            </Link>
+            </div>
         </div>
     );
 };

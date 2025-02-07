@@ -1,30 +1,15 @@
 import { Loader, Modal, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import fallback from '../../assets/course-fallback.jpg';
+import fallback from '../../assets/course-fallback.jpeg';
 import PageHeader from '../../component/page-header/PageHeader';
-import axiosInstance from '../../network/httpRequest';
-import { University } from '../../types/types';
+import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
 import NewUniversity from '../new-uni/NewUniversity';
 
 function ManageUniversity() {
     // Fetch universities data from API
-    const getUniversities = async () => {
-        const res = await axiosInstance.get('/university/get-all-universities');
-        return res.data;
-    };
-
-    const {
-        data: universities,
-        isLoading,
-        refetch,
-    } = useQuery<University[]>({
-        queryKey: ['universities'],
-        queryFn: getUniversities,
-        gcTime: 600000, // 10 minutes,
-    });
+    const { universities, isLoading, refetch } = useFetchingUniversities();
 
     // Manage modal state using useDisclosure
     const [opened, { open, close }] = useDisclosure(false);
@@ -37,7 +22,7 @@ function ManageUniversity() {
             <div className='w-760 p-4'>
                 <PageHeader title='Univeristies' />
                 <button
-                    className='primary-btn flex items-center justify-center gap-3 mb-6'
+                    className='primary-btn flex items-center justify-center gap-3 mb-6 text-sm'
                     onClick={open}
                 >
                     <Add fontSize='small' />

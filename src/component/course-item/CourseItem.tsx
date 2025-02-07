@@ -1,15 +1,15 @@
 import { Avatar } from '@mantine/core';
 import { Circle } from '@mui/icons-material';
-import fallback from '../../assets/course-fallback.jpg';
+import fallback from '../../assets/course-fallback.jpeg';
 import { Course } from '../../types/types';
 function CourseItem({ course }: { course: Course }) {
     console.log(course);
 
     return (
-        <div className='w-316 rounded-lg' style={{ boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px' }}>
+        <div className='w-full rounded-lg shadow-xl'>
             <img
                 src={course.image || fallback}
-                className='w-full h-44 rounded-lg object-cover'
+                className='w-full h-44 rounded-t-lg object-cover'
                 alt=''
             />
             <div className='p-4' style={{ background: '#FAFAFA' }}>

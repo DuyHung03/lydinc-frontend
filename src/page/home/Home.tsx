@@ -1,11 +1,29 @@
-function Home() {
-    // const { user } = useAuthStore();
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '../../network/httpRequest';
+import useAuthStore from '../../store/useAuthStore';
+import { User } from '../../types/types';
 
-    // useEffect(() => {
-    //     if (!user) {
-    //         window.location.replace('/login');
-    //     }
-    // }, []);
+function Home() {
+    const { user, login } = useAuthStore();
+
+    const { data } = useQuery<User>({
+        queryKey: ['user', user?.userId],
+        queryFn: async () => {
+            const res = await axiosInstance.get('/user/get-user-info', {
+                params: {
+                    userId: user?.userId,
+                },
+                withCredentials: true,
+            });
+            return res.data;
+        },
+        gcTime: 6000000,
+        enabled: !user,
+    });
+
+    if (data) {
+        login(data);
+    }
 
     return (
         <div className='w-screen'>
