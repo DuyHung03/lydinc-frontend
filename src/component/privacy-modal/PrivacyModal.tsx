@@ -1,41 +1,100 @@
 import { Divider, Modal } from '@mantine/core';
 import { Lock, Public } from '@mui/icons-material';
 import clsx from 'clsx';
+import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { useFetchCoursePrivacy } from '../../hook/useFetchCoursePrivacy';
+import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
+import { usePrivacyModal } from '../../hook/usePrivacyModal';
+import axiosInstance from '../../network/httpRequest';
 
 interface PrivacyModalProps {
+    courseId: number | null;
     opened: boolean;
-    onClose: () => void;
-    privacy: string;
-    universityIds: number[];
-    universities: { universityId: number; fullName: string }[];
-    error: string | null;
-    onPrivacyChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onSave: () => void;
+    closeModal: () => void;
+    // onSavePrivacy: () => void;
 }
 
-function PrivacyModal({
-    opened,
-    onClose,
-    privacy,
-    universityIds,
-    universities,
-    error,
-    onPrivacyChange,
-    onCheckboxChange,
-    onSave,
-}: PrivacyModalProps) {
+function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
+    const {
+        privacy,
+        selectedUniversityIds,
+        uncheckUniversityIds,
+        setPrivacy,
+        setInitialUniversityIds,
+        setSelectedUniversityIds,
+        onPrivacyChange,
+        onCheckboxChange,
+    } = usePrivacyModal();
+
+    const {
+        data: coursePrivacy,
+        refetch,
+        error,
+        // isLoading: loading,
+    } = useFetchCoursePrivacy(courseId);
+
+    const { data: universities } = useFetchingUniversities();
+
+    // const [isLoading, setIsLoading] = useState(loading);
+
+    useEffect(() => {
+        if (courseId) {
+            refetch();
+        }
+    }, [courseId, refetch]);
+
+    useEffect(() => {
+        if (coursePrivacy) {
+            setPrivacy(coursePrivacy.privacy);
+            setSelectedUniversityIds(coursePrivacy.universityIds);
+            setInitialUniversityIds(coursePrivacy.universityIds);
+        }
+    }, [coursePrivacy, setPrivacy, setSelectedUniversityIds, setInitialUniversityIds]);
+
+    const onSavePrivacy = async () => {
+        try {
+            // setIsLoading(true);
+            const requestData = {
+                privacy,
+                courseId,
+                universityIds: selectedUniversityIds,
+                deleteUniversityIds: uncheckUniversityIds,
+            };
+            console.log(requestData);
+
+            const res = await axiosInstance.post('/courses/edit-privacy', requestData, {
+                withCredentials: true,
+            });
+
+            if (res.status === 200) {
+                Swal.fire({
+                    text: 'Success',
+                    icon: 'success',
+                });
+                closeModal();
+            }
+        } catch {
+            Swal.fire({
+                text: 'Failed to save privacy settings',
+                icon: 'error',
+            });
+            closeModal();
+        } finally {
+            // setIsLoading(false);
+        }
+    };
+
     if (error) {
         <div className='text-red-600'>
             <p>An error occurred in privacy settings.</p>
         </div>;
         return;
     }
-
     return (
         <Modal
             opened={opened}
-            onClose={onClose}
+            onClose={closeModal}
             size={500}
             radius={0}
             transitionProps={{ transition: 'scale-y' }}
@@ -89,7 +148,9 @@ function PrivacyModal({
                                     className='w-full flex gap-3 items-center px-2 py-2'
                                 >
                                     <input
-                                        checked={universityIds.includes(university.universityId)}
+                                        checked={selectedUniversityIds.includes(
+                                            university.universityId
+                                        )}
                                         className='w-4 h-4 cursor-pointer'
                                         onChange={onCheckboxChange}
                                         type='checkbox'
@@ -102,7 +163,7 @@ function PrivacyModal({
                     </div>
                 )}
                 <Divider className='my-4' />
-                <button className='float-right primary-btn' onClick={onSave}>
+                <button className='float-right primary-btn' onClick={onSavePrivacy}>
                     Save
                 </button>
             </div>

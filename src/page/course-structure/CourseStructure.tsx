@@ -1,7 +1,6 @@
 import { Alert, Divider, Loader, LoadingOverlay } from '@mantine/core';
-import { InfoOutlined, Lock, LockPerson, Public } from '@mui/icons-material';
+import { InfoOutlined, LockPerson } from '@mui/icons-material';
 import { useQueryClient } from '@tanstack/react-query';
-import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,8 +10,6 @@ import { z } from 'zod';
 import ModuleList from '../../component/module-list/ModuleList';
 import PrivacyModal from '../../component/privacy-modal/PrivacyModal';
 import { useFetchingModules } from '../../hook/useFetchingModules';
-import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
-import { usePrivacyModal } from '../../hook/usePrivacyModal';
 import axiosInstance from '../../network/httpRequest';
 import useAuthStore from '../../store/useAuthStore';
 import { Module } from '../../types/types';
@@ -33,9 +30,9 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
     const [title, setTitle] = useState<string>('');
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [privacyModalOpen, setPrivacyModalOpen] = useState<boolean>(false);
     const queryClient = useQueryClient();
     const { data } = useFetchingModules(Number(courseId));
-    const { data: universities } = useFetchingUniversities();
 
     useEffect(() => {
         if (mode === 'edit' && courseId) {
@@ -153,7 +150,7 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
     };
 
     const saveModules = async () => {
-        console.log({ title, lecturerId: user?.userId, modules, privacy, universityIds });
+        console.log({ title, lecturerId: user?.userId, modules });
         try {
             setIsLoading(true);
             const res = await axiosInstance.post(
@@ -162,8 +159,6 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
                     title,
                     lecturerId: user?.userId,
                     modules,
-                    privacy,
-                    universityIds,
                 },
                 {
                     withCredentials: true,
@@ -231,51 +226,6 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
         }
     };
 
-    const {
-        opened,
-        privacy,
-        universityIds,
-        openModal,
-        closeModal,
-        onPrivacyChange,
-        onCheckboxChange,
-    } = usePrivacyModal();
-
-    const onSavePrivacy = async () => {
-        if (mode == 'edit') {
-            await savePrivacy();
-        } else {
-            return closeModal();
-        }
-    };
-
-    const savePrivacy = async () => {
-        try {
-            setIsLoading(true);
-            const requestData = {
-                privacy,
-                courseId,
-                universityIds,
-            };
-
-            const res = await axiosInstance.post('/courses/edit-privacy', requestData, {
-                withCredentials: true,
-            });
-
-            if (res.status === 200) {
-                toast.success('Privacy settings updated successfully');
-                closeModal();
-            }
-        } catch {
-            Swal.fire({
-                text: 'Failed to save privacy settings',
-                icon: 'error',
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
         console.log('Modules updated:', modules);
     }, [modules]);
@@ -286,14 +236,8 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
             <LoadingOverlay visible={isLoading} />
             <PrivacyModal
                 courseId={mode === 'create' ? null : Number(courseId)}
-                opened={opened}
-                privacy={privacy}
-                universityIds={universityIds}
-                onClose={closeModal}
-                universities={universities!}
-                onPrivacyChange={onPrivacyChange}
-                onCheckboxChange={onCheckboxChange}
-                onSave={onSavePrivacy}
+                opened={privacyModalOpen}
+                closeModal={() => setPrivacyModalOpen(false)}
             />
             <div className='w-full'>
                 <Alert
@@ -322,36 +266,31 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
                 }}
             >
                 <div className='w-full flex justify-between items-center'>
-                    <h1 className='font-semibold mb-4 text-xl'>
+                    <h1 className='font-semibold text-xl'>
                         {mode === 'create' ? 'Create course structure' : 'Edit course structure'}
                     </h1>
                     <div className='flex justify-center items-center gap-4'>
-                        <div
-                            className={`w-fit flex justify-center items-center gap-3 px-6 py-2 ${clsx(
-                                privacy === 'public'
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-blue-100 text-blue-600'
-                            )}`}
-                        >
-                            {privacy === 'public' ? (
-                                <>
-                                    <Public />
+                        {!courseId && (
+                            <div
+                                className={`w-fit flex justify-center items-center gap-3 px-6 py-2`}
+                            >
+                                <p className='text-gray-400 tex-sm italic'>
+                                    You can change the privacy for this course after created
+                                </p>
+                                <div className='text-xs bg-green-600 text-white rounded-2xl font-semibold px-4 py-2'>
                                     Public
-                                </>
-                            ) : (
-                                <>
-                                    <Lock />
-                                    Private
-                                </>
-                            )}
-                        </div>
-                        <button
-                            onClick={openModal}
-                            className='flex justify-center items-center primary-btn gap-3'
-                        >
-                            <LockPerson />
-                            <p>Edit privacy</p>
-                        </button>
+                                </div>
+                            </div>
+                        )}
+                        {courseId && (
+                            <button
+                                onClick={() => setPrivacyModalOpen(true)}
+                                className='flex justify-center items-center primary-btn gap-3'
+                            >
+                                <LockPerson />
+                                <p>Edit privacy</p>
+                            </button>
+                        )}
                     </div>
                 </div>
                 <Divider w={'100%'} my={12} />

@@ -3,7 +3,8 @@ import { useState } from 'react';
 export function usePrivacyModal(initialPrivacy = 'public') {
     const [opened, setOpened] = useState(false);
     const [privacy, setPrivacy] = useState(initialPrivacy);
-    const [universityIds, setUniversityIds] = useState<number[]>([]);
+    const [selectedUniversityIds, setSelectedUniversityIds] = useState<number[]>([]);
+    const [initialUniversityIds, setInitialUniversityIds] = useState<number[]>([]);
     const [uncheckUniversityIds, setUncheckUniversityIds] = useState<number[]>([]);
 
     const openModal = () => setOpened(true);
@@ -16,19 +17,32 @@ export function usePrivacyModal(initialPrivacy = 'public') {
     const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
         const universityId = Number(value);
-        setUniversityIds((prev) =>
+
+        setSelectedUniversityIds((prev) =>
             checked ? [...prev, universityId] : prev.filter((id) => id !== universityId)
         );
+
+        setUncheckUniversityIds((prev) => {
+            if (!checked && initialUniversityIds.includes(universityId)) {
+                // If it was initially selected but is now unchecked, add to uncheck list
+                return [...prev, universityId];
+            } else {
+                // If checked again, remove it from uncheck list
+                return prev.filter((id) => id !== universityId);
+            }
+        });
     };
 
     return {
         opened,
         privacy,
-        universityIds,
+        selectedUniversityIds,
         uncheckUniversityIds,
+        initialUniversityIds,
+        setInitialUniversityIds,
         setUncheckUniversityIds,
         setPrivacy,
-        setUniversityIds,
+        setSelectedUniversityIds,
         openModal,
         closeModal,
         onPrivacyChange,

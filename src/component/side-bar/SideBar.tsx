@@ -1,57 +1,21 @@
 import { Divider, NavLink } from '@mantine/core';
 import { Edit, LockPerson } from '@mui/icons-material';
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { useFetchCoursePrivacy } from '../../hook/useFetchCoursePrivacy';
 import { useFetchingModules } from '../../hook/useFetchingModules';
-import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
-import { usePrivacyModal } from '../../hook/usePrivacyModal';
 import PrivacyModal from '../privacy-modal/PrivacyModal';
 
 function SideBar() {
     const { courseId } = useParams<{ courseId: string; lesson: string }>();
+    const [openModal, setOpenModal] = useState(false);
     const { pathname } = useLocation();
 
     //Get the menu for the sidebar
     const { data: modulesResponse } = useFetchingModules(Number(courseId));
-    const { data: universities } = useFetchingUniversities();
 
     const isActive = (path: string) => {
         return pathname.includes(encodeURIComponent(path));
-    };
-
-    const {
-        opened,
-        privacy,
-        universityIds,
-        setPrivacy,
-        setUniversityIds,
-        openModal,
-        closeModal,
-        onPrivacyChange,
-        onCheckboxChange,
-    } = usePrivacyModal();
-
-    const { data: coursePrivacy, refetch, error } = useFetchCoursePrivacy(Number(courseId));
-
-    useEffect(() => {
-        if (courseId) {
-            refetch();
-        }
-    }, [courseId, refetch]);
-
-    useEffect(() => {
-        if (coursePrivacy) {
-            setPrivacy(coursePrivacy.privacy);
-            console.log(coursePrivacy);
-
-            setUniversityIds(coursePrivacy.universityIds);
-        }
-    }, [coursePrivacy, setPrivacy, setUniversityIds]);
-
-    const onSavePrivacy = async () => {
-        console.log(privacy, universityIds);
     };
 
     return (
@@ -66,7 +30,7 @@ function SideBar() {
                         <p>Edit course's structure</p>
                     </Link>
                     <button
-                        onClick={openModal}
+                        onClick={() => setOpenModal(true)}
                         className='flex justify-center items-center primary-btn gap-3 mb-2'
                     >
                         <LockPerson />
@@ -110,17 +74,10 @@ function SideBar() {
                 ) : null
             )}
             <PrivacyModal
-                opened={opened}
-                privacy={privacy}
-                universityIds={universityIds}
-                error={error?.message || null}
-                onClose={closeModal}
-                universities={universities || []}
-                onPrivacyChange={onPrivacyChange}
-                onCheckboxChange={onCheckboxChange}
-                onSave={() => {
-                    onSavePrivacy();
-                }}
+                opened={openModal}
+                closeModal={() => setOpenModal(false)}
+                // onSavePrivacy={onSavePrivacy}
+                courseId={Number(courseId)}
             />
         </div>
     );
