@@ -33,7 +33,7 @@ const NewUser = () => {
     }, [state]);
 
     // Fetch universities
-    const { universities, isError } = useFetchingUniversities();
+    const { data: universities, isError } = useFetchingUniversities();
 
     const {
         register,
@@ -68,7 +68,7 @@ const NewUser = () => {
 
     const handleUniversityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedUniversity(Number(e.target.value));
-        setValue('universityId', Number(e.target.value)); // Update form value
+        setValue('universityId', Number(e.target.value));
     };
 
     return (
@@ -99,7 +99,8 @@ const NewUser = () => {
                             <div>
                                 <label
                                     htmlFor='username'
-                                    className="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:text-red-500 after:ml-0.5"
+                                    className="block text-sm font-medium text-gray-700 mb-1 after:content-['*']
+                                     after:text-red-500 after:ml-0.5"
                                 >
                                     Username
                                 </label>

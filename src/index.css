@@ -143,6 +143,14 @@ em {
     font-style: italic;
 }
 
+ol {
+    list-style-type: auto;
+}
+
+ul {
+    list-style-type: disc;
+}
+
 @layer components {
     .primary-btn {
         @apply bg-primary text-white text-sm px-4 py-2 cursor-pointer text-center;

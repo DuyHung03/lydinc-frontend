@@ -4,6 +4,7 @@ import SideBarCourseLayout from '../layout/sidebar-course-layout/SideBarCourseLa
 import Admin from '../page/admin/Admin';
 import ChangePassword from '../page/change-password/ChangePassword';
 import CourseDetails from '../page/course-details/CourseDetails';
+import CourseStructure from '../page/course-structure/CourseStructure';
 import EditCourse from '../page/edit-course/EditCourse';
 import Forbiden from '../page/forbiden/Forbiden';
 import Home from '../page/home/Home';
@@ -11,8 +12,8 @@ import Lecturer from '../page/lecturer/Lecturer';
 import Login from '../page/login/Login';
 import ManageUniversity from '../page/manage-uni/ManageUniversity';
 import ManageUsers from '../page/manage-users/ManageUsers';
-import NewCourse from '../page/new-course/NewCourse';
 import NewUser from '../page/new-user/NewUser';
+import PageNotFound from '../page/not-found/PageNotFound';
 import StudentUpload from '../page/student-upload/StudentUpload';
 import Student from '../page/student/Student';
 import UniversityDetails from '../page/uni-details/UniversityDetails';
@@ -34,6 +35,10 @@ export const publicRoutes: RouteObject[] = [
         element: <Forbiden />,
     },
     {
+        path: '*',
+        element: <PageNotFound />,
+    },
+    {
         path: 'change-password',
         element: <MainLayout isFooter={false} isHeader={false} />,
         children: [
@@ -52,27 +57,32 @@ export const lecturerRoutes: RouteObject[] = [
         children: [
             {
                 index: true,
-                element: (
-                    <ProtectedRoute element={<Lecturer />} allowedRoles={['LECTURER', 'ADMIN']} />
-                ),
+                element: <ProtectedRoute element={<Lecturer />} allowedRoles={['LECTURER']} />,
             },
             {
                 path: 'new-course',
-                element: <ProtectedRoute element={<NewCourse />} allowedRoles={['LECTURER']} />,
-            },
-            {
-                path: 'course/:courseId',
                 element: (
                     <ProtectedRoute
-                        element={<CourseDetails />}
-                        allowedRoles={['LECTURER', 'ADMIN']}
+                        element={<CourseStructure mode='create' />}
+                        allowedRoles={['LECTURER']}
                     />
                 ),
             },
             {
+                path: 'course/:courseId',
+                element: <ProtectedRoute element={<CourseDetails />} allowedRoles={['LECTURER']} />,
+            },
+            {
                 path: 'edit-course/:courseId',
+                element: <ProtectedRoute element={<EditCourse />} allowedRoles={['LECTURER']} />,
+            },
+            {
+                path: 'edit-structure/:courseId',
                 element: (
-                    <ProtectedRoute element={<EditCourse />} allowedRoles={['LECTURER', 'ADMIN']} />
+                    <ProtectedRoute
+                        element={<CourseStructure mode='edit' />}
+                        allowedRoles={['LECTURER']}
+                    />
                 ),
             },
         ],
@@ -83,9 +93,7 @@ export const lecturerRoutes: RouteObject[] = [
         children: [
             {
                 path: 'edit-course/:courseId/:module?/:lesson?',
-                element: (
-                    <ProtectedRoute element={<EditCourse />} allowedRoles={['LECTURER', 'ADMIN']} />
-                ),
+                element: <ProtectedRoute element={<EditCourse />} allowedRoles={['LECTURER']} />,
             },
         ],
     },

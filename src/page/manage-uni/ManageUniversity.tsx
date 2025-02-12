@@ -9,7 +9,7 @@ import NewUniversity from '../new-uni/NewUniversity';
 
 function ManageUniversity() {
     // Fetch universities data from API
-    const { universities, isLoading, refetch } = useFetchingUniversities();
+    const { data: universities, isLoading, refetch } = useFetchingUniversities();
 
     // Manage modal state using useDisclosure
     const [opened, { open, close }] = useDisclosure(false);
@@ -19,7 +19,7 @@ function ManageUniversity() {
     };
     return (
         <div className='w-full flex justify-center items-center'>
-            <div className='w-760 p-4'>
+            <div className='w-9/12 p-4'>
                 <PageHeader title='Univeristies' />
                 <button
                     className='primary-btn flex items-center justify-center gap-3 mb-6 text-sm'
@@ -44,6 +44,9 @@ function ManageUniversity() {
                                 </th>
                                 <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold bg-gray-100'>
                                     Full name
+                                </th>
+                                <th className='border-gray-300 border-r border-solid px-6 py-3 text-center text-sm font-semibold bg-gray-100'>
+                                    Students
                                 </th>
                                 <th className='px-6 py-3 text-center text-sm font-semibold bg-gray-100'>
                                     Actions
@@ -80,7 +83,7 @@ function ManageUniversity() {
                                         transitionProps={{ duration: 200, enterDelay: 200 }}
                                         color='gray'
                                     >
-                                        <td className='border-gray-300 border-r border-solid cursor-pointer px-6 py-4 text-center text-sm align-middle'>
+                                        <td className='border-gray-300 border-r border-solid cursor-pointer px-6 hover:underline duration-150 py-4 text-center text-sm align-middle'>
                                             <Link
                                                 state={{ university }}
                                                 to={`/admin/university/${university.fullName}`}
@@ -90,6 +93,9 @@ function ManageUniversity() {
                                         </td>
                                     </Tooltip>
 
+                                    <td className='border-gray-300 border-r border-solid cursor-pointer px-6 py-4 text-center text-sm align-middle'>
+                                        {university.studentCount}
+                                    </td>
                                     {/* Actions Column with Tooltip */}
                                     <td className='px-6 py-4 text-center align-middle'>
                                         <Tooltip

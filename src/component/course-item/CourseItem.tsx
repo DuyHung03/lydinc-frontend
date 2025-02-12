@@ -1,5 +1,6 @@
 import { Avatar } from '@mantine/core';
-import { Circle } from '@mui/icons-material';
+import { Lock, Public } from '@mui/icons-material';
+import clsx from 'clsx';
 import fallback from '../../assets/course-fallback.jpeg';
 import { Course } from '../../types/types';
 function CourseItem({ course }: { course: Course }) {
@@ -13,7 +14,9 @@ function CourseItem({ course }: { course: Course }) {
                 alt=''
             />
             <div className='p-4' style={{ background: '#FAFAFA' }}>
-                <p className='font-semibold  mb-4 text-black text-base'>{course.title}</p>
+                <p className='font-semibold  mb-4 text-black text-base overflow-ellipsis overflow-hidden text-nowrap'>
+                    {course.title}
+                </p>
 
                 <div className='flex justify-between items-center'>
                     <div className='flex gap-4 items-center'>
@@ -25,8 +28,18 @@ function CourseItem({ course }: { course: Course }) {
                             course.status == 'ACTIVE' ? 'text-green-400' : 'text-red-500'
                         }`}
                     >
-                        <Circle style={{ fontSize: '8px' }} />
-                        <p className='text-sm'>{course.status || 'ACTIVE'}</p>
+                        {course.privacy == 'public' ? (
+                            <Public color='success' />
+                        ) : (
+                            <Lock color='info' />
+                        )}
+                        <p
+                            className={`text-sm ${clsx(
+                                course.privacy == 'public' ? 'text-green-700' : 'text-blue-500'
+                            )}`}
+                        >
+                            {course.privacy.toUpperCase()}
+                        </p>
                     </div>
                 </div>
             </div>

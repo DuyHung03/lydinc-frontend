@@ -16,6 +16,7 @@ export type Course = {
     title: string;
     enrollmentDate: string;
     status: string | null;
+    privacy: string;
     image: string | null;
     lecturerId: string | null;
     lecturerName: string | null;
@@ -36,7 +37,7 @@ export type University = {
     fullName: string;
     logo: string | null;
     location: string | null;
-    students: User[];
+    studentCount: number;
 };
 
 export type Module = {
@@ -62,4 +63,16 @@ export type StudentAccount = {
     shortName: string;
     email: string;
     phone: string;
+};
+
+export type ModulesResponse = {
+    courseId: number;
+    courseTitle: string;
+    modules: Module[];
+};
+
+export type CoursePrivacy = {
+    courseId: number;
+    privacy: string;
+    universityIds: number[];
 };

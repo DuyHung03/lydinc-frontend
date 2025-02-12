@@ -111,7 +111,7 @@ const StudentUpload = () => {
                         <input {...getInputProps()} />
                     </div>
                 )}
-                <StudenDataTable university={state} data={data} />
+                <StudenDataTable university={state} students={data} />
             </div>
         </div>
     );

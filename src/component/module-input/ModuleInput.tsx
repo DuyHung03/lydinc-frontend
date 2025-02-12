@@ -5,21 +5,21 @@ import { Module } from '../../types/types';
 export default function ModuleInput({
     module,
     modules,
-    updateTitle,
+    onChangeTitle,
     addLesson,
     deleteModule,
     errors,
 }: {
     module: Module;
-
-    //To find the module level 1 (lessons)
-    modules: Module[];
-    updateTitle: (moduleId: string, newTitle: string) => void;
+    modules: Module[]; //To find the module level 1 (lessons)
+    onChangeTitle: (moduleId: string, newTitle: string) => void;
     addLesson: (parentModuleId: string) => void;
     deleteModule: (moduleId: string) => void;
     errors: Record<string, string>;
 }) {
-    const lessons = modules.filter((m) => m.level === 1 && m.parentModuleId === module.moduleId);
+    const lessons = modules.filter(
+        (m) => m.level == 1 && m.status != 'deleted' && m.parentModuleId === module.moduleId
+    );
 
     return (
         <div className='py-4'>
@@ -36,13 +36,24 @@ export default function ModuleInput({
                         id={module.moduleId}
                         type='text'
                         value={module.moduleTitle}
-                        onChange={(e) => updateTitle(module.moduleId, e.target.value)}
+                        onChange={(e) => onChangeTitle(module.moduleId, e.target.value)}
                         placeholder="Enter module's title"
                         className='block w-full px-4 py-3 border border-gray-300 shadow-sm sm:text-sm'
                     />
-                    <Tooltip label='Delete this module' openDelay={2000} bg={'gray'}>
+                    <Tooltip
+                        label={
+                            lessons.length > 0
+                                ? 'Cannot delete module with lessons'
+                                : 'Delete this module'
+                        }
+                        openDelay={2000}
+                        bg={'gray'}
+                    >
                         <button
-                            className='w-14 text-gray-400 hover:text-red-400 hover:bg-red-100 duration-150 rounded-md'
+                            disabled={lessons.length > 0}
+                            className={`w-14 text-gray-400 hover:text-red-400 hover:bg-red-100 duration-150 rounded-md ${
+                                lessons.length > 0 ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
                             onClick={() => deleteModule(module.moduleId)}
                         >
                             <Delete />
@@ -70,7 +81,7 @@ export default function ModuleInput({
                                 id={lesson.moduleId}
                                 type='text'
                                 value={lesson.moduleTitle}
-                                onChange={(e) => updateTitle(lesson.moduleId, e.target.value)}
+                                onChange={(e) => onChangeTitle(lesson.moduleId, e.target.value)}
                                 placeholder="Enter lesson's title"
                                 className='block w-full px-4 py-3 border border-gray-300 shadow-sm sm:text-sm'
                             />

@@ -1,4 +1,5 @@
 import { LoadingOverlay, Tooltip } from '@mantine/core';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -7,10 +8,10 @@ import axiosInstance from '../../network/httpRequest';
 import { StudentAccount, University } from '../../types/types';
 
 function StudenDataTable({
-    data,
+    students,
     university,
 }: {
-    data: StudentAccount[];
+    students: StudentAccount[];
     university: University | null;
 }) {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ function StudenDataTable({
     const [selectedUniversity, setSelectedUniversity] = useState<number | null>(
         university?.universityId || null
     );
-    const { universities } = useFetchingUniversities();
+    const { data: universities } = useFetchingUniversities();
 
     useEffect(() => {
         if (university) {
@@ -28,7 +29,7 @@ function StudenDataTable({
 
     // Convert the keys of each student row to lowercase and set the universityId
     const prepareStudentData = () => {
-        const newData = data;
+        const newData = students;
         return newData.map((row) => ({
             ...Object.fromEntries(
                 Object.entries(row).map(([key, value]) => [key.toLowerCase(), value])
@@ -59,25 +60,21 @@ function StudenDataTable({
                         navigate('/admin/manage-users');
                     },
                 });
-            } else {
+            }
+        } catch (error) {
+            console.log(error);
+
+            if (axios.isAxiosError(error)) {
                 Swal.fire({
                     title: 'Failed!',
+                    text: error.response?.data,
                     icon: 'error',
                     confirmButtonText: 'Ok',
                     confirmButtonColor: '#b39858',
-                    didClose: () => {
-                        navigate('/admin/manage-users');
-                    },
                 });
+            } else {
+                console.error('Unexpected error:', error);
             }
-        } catch (error) {
-            Swal.fire({
-                title: 'Failed!',
-                icon: 'error',
-                confirmButtonText: 'Ok',
-                confirmButtonColor: '#b39858',
-            });
-            console.log(error);
         } finally {
             setLoading(false);
         }
@@ -91,7 +88,7 @@ function StudenDataTable({
 
     return (
         <div className='w-full max-w-full'>
-            {data.length > 0 && (
+            {students.length > 0 && (
                 <>
                     <label
                         htmlFor='universityId'
@@ -117,7 +114,7 @@ function StudenDataTable({
                     <table className='w-full mt-4 border'>
                         <thead>
                             <tr className='bg-stone-200'>
-                                {Object.keys(data[0]).map((key) => (
+                                {Object.keys(students[0]).map((key) => (
                                     <th
                                         key={key}
                                         className='border border-solid font-semibold border-gray-300 px-2 py-1'
@@ -128,7 +125,7 @@ function StudenDataTable({
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((row, index) => (
+                            {students.map((row, index) => (
                                 <tr key={index}>
                                     {Object.values(row).map((cell, i) => (
                                         <Tooltip key={i} openDelay={1000} bg='gray' label={cell}>

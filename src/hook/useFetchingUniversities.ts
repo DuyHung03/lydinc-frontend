@@ -8,16 +8,9 @@ export const useFetchingUniversities = () => {
         return res.data;
     };
 
-    const {
-        data: universities,
-        isLoading,
-        refetch,
-        isError,
-    } = useQuery<University[]>({
+    return useQuery<University[]>({
         queryKey: ['universities'],
         queryFn: getUniversities,
         gcTime: 600000, // Cache: 10 minutes,
     });
-
-    return { universities, isLoading, refetch, isError };
 };
