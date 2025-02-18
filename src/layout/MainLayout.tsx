@@ -1,10 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import Footer from '../component/footer/Footer';
 import Header from '../component/header/Header';
+import ScrollToTop from '../component/scroll-to-top/ScrollToTop';
 
 function MainLayout({ isFooter = true, isHeader = true }) {
     return (
         <div className='w-full flex flex-col min-h-screen'>
+            <ScrollToTop />
             {isHeader && (
                 <div className='fixed z-10 w-full top-0'>
                     <Header />

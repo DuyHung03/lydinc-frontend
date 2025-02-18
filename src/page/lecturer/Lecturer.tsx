@@ -1,4 +1,4 @@
-import { Divider, Loader } from '@mantine/core';
+import { Loader } from '@mantine/core';
 import { Add } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -30,7 +30,7 @@ const Lecturer = () => {
         <div className='w-full flex justify-center items-center'>
             <div className='w-1200 p-4'>
                 <h1 className='font-semibold mb-4 text-xl'>Recent courses ({courses?.length}):</h1>
-                <Divider w={'100%'} my={24} />
+                <hr />
                 <div>
                     {courses ? (
                         <div className='w-full grid grid-cols-3 gap-7'>

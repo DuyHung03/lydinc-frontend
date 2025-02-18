@@ -1,4 +1,5 @@
 import { RouteObject } from 'react-router-dom';
+import CourseLayout from '../layout/course-layout/CourseLayout';
 import MainLayout from '../layout/MainLayout';
 import SideBarCourseLayout from '../layout/sidebar-course-layout/SideBarCourseLayout';
 import Admin from '../page/admin/Admin';
@@ -108,8 +109,14 @@ export const studentRoutes: RouteObject[] = [
                 index: true,
                 element: <ProtectedRoute element={<Student />} allowedRoles={['STUDENT']} />,
             },
+        ],
+    },
+    {
+        path: 'student/course',
+        element: <CourseLayout />,
+        children: [
             {
-                path: 'course/:courseId',
+                path: ':courseId/:module?/:lesson?',
                 element: <ProtectedRoute element={<CourseDetails />} allowedRoles={['STUDENT']} />,
             },
         ],

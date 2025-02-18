@@ -23,24 +23,26 @@ function CourseItem({ course }: { course: Course }) {
                         <Avatar size={'md'} src={course.lecturerPhoto || course.lecturerName} />
                         <p className='text-sm'>{course.lecturerName || 'Hehe'}</p>
                     </div>
-                    <div
-                        className={`flex flex-row items-center gap-2 ${
-                            course.status == 'ACTIVE' ? 'text-green-400' : 'text-red-500'
-                        }`}
-                    >
-                        {course.privacy == 'public' ? (
-                            <Public color='success' />
-                        ) : (
-                            <Lock color='info' />
-                        )}
-                        <p
-                            className={`text-sm ${clsx(
-                                course.privacy == 'public' ? 'text-green-700' : 'text-blue-500'
-                            )}`}
+                    {course?.privacy && (
+                        <div
+                            className={`flex flex-row items-center gap-2 ${
+                                course.status == 'ACTIVE' ? 'text-green-400' : 'text-red-500'
+                            }`}
                         >
-                            {course.privacy.toUpperCase()}
-                        </p>
-                    </div>
+                            {course.privacy == 'public' ? (
+                                <Public color='success' />
+                            ) : (
+                                <Lock color='info' />
+                            )}
+                            <p
+                                className={`text-sm ${clsx(
+                                    course.privacy == 'public' ? 'text-green-700' : 'text-blue-500'
+                                )}`}
+                            >
+                                {course?.privacy?.toUpperCase()}
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

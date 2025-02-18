@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../../component/header/Header';
+import ScrollToTop from '../../component/scroll-to-top/ScrollToTop';
 import SideBar from '../../component/side-bar/SideBar';
 function SideBarCourseLayout() {
     return (
         <div className='flex flex-col relative h-screen w-full'>
+            <ScrollToTop />
             <div className='fixed z-50 top-0'>
                 <Header />
             </div>

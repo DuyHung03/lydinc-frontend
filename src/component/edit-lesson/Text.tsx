@@ -15,7 +15,7 @@ function Text({
             <textarea
                 value={component.text ?? ''}
                 onChange={(e) => onChangeValue(component.lessonId, e.target.value)}
-                className='w-full p-4 border border-solid border-gray-200 rounded-md h-32'
+                className='w-full p-4 border border-solid border-gray-200 rounded-md min-h-32 h-32'
             ></textarea>
             {errors[component.lessonId] && (
                 <p className='text-red-500 text-sm mt-1'>{errors[component.lessonId]}</p>

@@ -12,6 +12,7 @@ function Student() {
         const res = await axiosInstance.get('/courses/courses-by-student', {
             params: {
                 studentId: user?.userId,
+                universityId: user?.universityId,
             },
         });
 
@@ -22,18 +23,24 @@ function Student() {
         queryKey: ['course', user?.userId],
         queryFn: getCourseByStudent,
     });
+
+    console.log(courses);
+
     return (
         <div className='w-full flex justify-center items-center'>
             <div className='w-1200 py-4'>
-                <p className='font-semibold text-2xl mb-6'>My courses</p>
-                {courses &&
-                    courses?.map((course) => (
-                        <div className='w-fit' key={course.courseId}>
-                            <Link to={`/student/course/${course.courseId}`} state={{ course }}>
+                <div className='mb-6'>
+                    <p className='font-semibold text-2xl mb-3'>My courses</p>
+                    <hr />
+                </div>
+                <div className='w-full grid grid-cols-3 gap-7'>
+                    {courses &&
+                        courses?.map((course) => (
+                            <Link to={`/student/course/${course.courseId}/`}>
                                 <CourseItem course={course} />
                             </Link>
-                        </div>
-                    ))}
+                        ))}
+                </div>
             </div>
         </div>
     );

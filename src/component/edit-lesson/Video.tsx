@@ -1,10 +1,10 @@
 import { Progress } from '@mantine/core';
-import { AddAPhoto } from '@mui/icons-material';
+import { VideoCallRounded } from '@mui/icons-material';
 import { ChangeEvent, useState } from 'react';
 import axiosInstance from '../../network/httpRequest';
 import { Lesson } from '../../types/types';
 
-function Image({
+function Video({
     component,
     setComponents,
     errors,
@@ -15,7 +15,6 @@ function Image({
 }) {
     const [file, setFile] = useState<File | null>(null);
     const [progress, setProgress] = useState<number>(0);
-    console.log(component);
 
     async function onFileChosen(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
@@ -23,10 +22,9 @@ function Image({
             setFile(e.target.files[0]);
             const formData = new FormData();
             formData.append('file', e.target.files[0]);
+
             const res = await axiosInstance.post('drive/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: { 'Content-Type': 'multipart/form-data' },
                 onUploadProgress: (progressEvent) => {
                     const percentCompleted = Math.round(
                         (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
@@ -34,20 +32,21 @@ function Image({
                     setProgress(percentCompleted);
                 },
             });
-            console.log(res);
 
-            setComponents((prev: Lesson[]) =>
-                prev.map((comp: Lesson) =>
-                    comp.lessonId === component.lessonId ? { ...comp, url: res.data } : comp
+            setComponents((prev) =>
+                prev.map((comp) =>
+                    comp.lessonId === component.lessonId
+                        ? { ...comp, url: res.data.fileUrl, fileName: res.data.fileName }
+                        : comp
                 )
             );
         }
     }
 
-    const onRemoveFile = () => {
+    const onRemoveVideo = () => {
         setFile(null);
-        setComponents((prev: Lesson[]) =>
-            prev.map((comp: Lesson) =>
+        setComponents((prev) =>
+            prev.map((comp) =>
                 comp.lessonId === component.lessonId ? { ...comp, url: null } : comp
             )
         );
@@ -56,43 +55,47 @@ function Image({
 
     return (
         <div className='w-full mb-6'>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>Photo:</label>
+            <label className='block text-sm font-medium text-gray-700 mb-2'>Video:</label>
             {component.url || file ? (
                 <div className='w-full border border-dashed border-gray-400 rounded-lg p-4 mb-2'>
                     <button
                         className='float-right mb-4 rounded-xl bg-slate-200 text-gray-600 px-5 py-2 hover:bg-red-200 hover:text-red-500 duration-150'
-                        onClick={onRemoveFile}
+                        onClick={onRemoveVideo}
                     >
                         Remove
                     </button>
-                    <img
+                    {/* <video
+                        controls
                         src={component.url ?? (file ? URL.createObjectURL(file) : '')}
-                        className='mb-6 block m-auto max-h-64'
-                        alt='Uploaded'
-                    />
+                        className='mb-6 w-full max-h-64 rounded-lg'
+                    /> */}
+                    <iframe
+                        src={component.url ?? (file ? URL.createObjectURL(file) : '')}
+                        className='mb-6 w-full h-96 rounded-lg'
+                        allow='autoplay'
+                        allowFullScreen
+                    ></iframe>
                 </div>
             ) : (
-                <div className='w-full mb-6'>
-                    <label
-                        htmlFor='addPhoto'
-                        className='w-full flex justify-center gap-3 bg-gray-100 items-center p-6 cursor-pointer border border-dashed text-gray-400 rounded-lg border-gray-400 mt-3 font-medium'
-                    >
-                        <AddAPhoto fontSize='small' />
-                        <p>Add Photo</p>
-                    </label>
+                <label
+                    htmlFor={`addVideo-${component.lessonId}`}
+                    className='w-full flex justify-center gap-3 bg-gray-100 items-center p-6 cursor-pointer border border-dashed text-gray-400 rounded-lg mt-3 font-medium'
+                >
+                    <VideoCallRounded fontSize='small' />
+                    <p>Add Video</p>
                     <input
                         type='file'
-                        accept='image/*'
-                        id='addPhoto'
+                        accept='video/*'
+                        id={`addVideo-${component.lessonId}`}
                         className='hidden'
                         onChange={onFileChosen}
                     />
-                </div>
+                </label>
             )}
             {progress > 0 && (
                 <div className='flex gap-3 items-center'>
                     <Progress w={300} color='lime' value={progress} transitionDuration={200} />
-                    {progress == 100 ? (
+                    {progress === 100 ? (
                         <p className='text-sm italic text-green-700'>Upload successfully</p>
                     ) : (
                         <p className='text-sm italic text-gray-400'>Uploading: {progress}%</p>
@@ -106,4 +109,4 @@ function Image({
     );
 }
 
-export default Image;
+export default Video;

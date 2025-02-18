@@ -1,17 +1,18 @@
 import { Tooltip } from '@mantine/core';
 import { AddPhotoAlternate, Delete, FormatSize, VideoCall } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
 import { arrayMoveImmutable } from 'array-move';
 import { useEffect, useState } from 'react';
 import SortableList, { SortableItem } from 'react-easy-sort';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { v4 } from 'uuid';
+import DocumentsUpload from '../../component/documents-upload/DocumentsUpload';
+import Image from '../../component/edit-lesson/Image';
+import Text from '../../component/edit-lesson/Text';
+import Video from '../../component/edit-lesson/Video';
 import '../../component/editor/Editor.scss';
-import Image from '../../component/lesson/Image';
-import Text from '../../component/lesson/Text';
-import Video from '../../component/lesson/Video';
 import { useFetchingModules } from '../../hook/useFetchingModules';
+import { useFetchLessonData } from '../../hook/useFetchLessonData';
 import axiosInstance from '../../network/httpRequest';
 import { Lesson, Module } from '../../types/types';
 
@@ -21,29 +22,16 @@ function EditCourse() {
     const [components, setComponents] = useState<Lesson[]>([]);
     const { data } = useFetchingModules(Number(courseId));
     const [errors, setErrors] = useState<Record<string, string>>({});
-
     const module = location.state as Module | null;
     const navigate = useNavigate();
-
-    const getLesson = async (moduleId: string) => {
-        const res = await axiosInstance.get('/lesson/get-lesson-data', {
-            params: { moduleId },
-        });
-        return res.data;
-    };
+    console.log(components);
 
     const {
         data: lessonData,
         // isLoading,
         isError,
         error,
-    } = useQuery<Lesson[]>({
-        queryKey: module ? ['lesson', module.moduleId] : [],
-        queryFn: () => getLesson(module!.moduleId),
-        enabled: !!module,
-        staleTime: 0,
-        gcTime: 0,
-    });
+    } = useFetchLessonData({ module });
 
     function validateLessonData() {
         const newErrors: Record<string, string> = {};
@@ -90,19 +78,21 @@ function EditCourse() {
                 type,
                 text: null,
                 url: null,
+                fileName: null,
             },
         ]);
     };
 
     const onSortEnd = (oldIndex: number, newIndex: number) => {
         setComponents((prev) => {
-            const sorted = arrayMoveImmutable(prev, oldIndex, newIndex);
-            return sorted.map((component, idx) => ({
-                ...component,
-                index: idx + 1,
-            }));
+            const sortedMovable = arrayMoveImmutable(
+                prev.filter((comp) => comp.type !== 4),
+                oldIndex,
+                newIndex
+            ).map((comp, index) => ({ ...comp, index: index + 1 }));
+
+            return prev.map((comp) => (comp.type === 4 ? comp : sortedMovable.shift()!));
         });
-        console.log(components);
     };
 
     const onChangeTextValue = (componentId: string, value: string) => {
@@ -190,40 +180,50 @@ function EditCourse() {
                     className='w-full flex flex-col gap-4'
                     draggedItemClassName='dragged'
                 >
-                    {components.map((component) => (
-                        <SortableItem key={component.lessonId}>
-                            <div className='sortable-item flex justify-center items-center gap-3'>
-                                {component.type === 1 ? (
-                                    <Text
-                                        component={component}
-                                        onChangeValue={onChangeTextValue}
-                                        errors={errors}
-                                    />
-                                ) : component.type === 2 ? (
-                                    <Image
-                                        component={component}
-                                        errors={errors}
-                                        setComponents={setComponents}
-                                    />
-                                ) : (
-                                    <Video
-                                        component={component}
-                                        setComponents={setComponents}
-                                        errors={errors}
-                                    />
-                                )}
-                                <Tooltip label='Delete this lesson' openDelay={2000} bg={'gray'}>
-                                    <button
-                                        className='w-14 p-2 text-gray-400 hover:text-red-400 hover:bg-red-100 duration-150 rounded-md'
-                                        onClick={() => deleteComponent(component.lessonId)}
+                    {components
+                        .filter((component) => component.type !== 4)
+                        .map((component) => (
+                            <SortableItem key={component.lessonId}>
+                                <div className='sortable-item flex justify-center items-center gap-3'>
+                                    {component.type === 1 ? (
+                                        <Text
+                                            component={component}
+                                            onChangeValue={onChangeTextValue}
+                                            errors={errors}
+                                        />
+                                    ) : component.type === 2 ? (
+                                        <Image
+                                            component={component}
+                                            errors={errors}
+                                            setComponents={setComponents}
+                                        />
+                                    ) : component.type === 3 ? (
+                                        <Video
+                                            component={component}
+                                            setComponents={setComponents}
+                                            errors={errors}
+                                        />
+                                    ) : null}
+                                    <Tooltip
+                                        label='Delete this lesson'
+                                        openDelay={2000}
+                                        bg={'gray'}
                                     >
-                                        <Delete />
-                                    </button>
-                                </Tooltip>
-                            </div>
-                        </SortableItem>
-                    ))}
+                                        <button
+                                            className='w-14 p-2 text-gray-400 hover:text-red-400 hover:bg-red-100 duration-150 rounded-md'
+                                            onClick={() => deleteComponent(component.lessonId)}
+                                        >
+                                            <Delete />
+                                        </button>
+                                    </Tooltip>
+                                </div>
+                            </SortableItem>
+                        ))}
                 </SortableList>
+                <hr className='mb-5' />
+                {lessonData && lessonData.length > 0 && (
+                    <DocumentsUpload components={components} setComponents={setComponents} />
+                )}
 
                 <div className='w-full flex justify-center items-center gap-4'>
                     <button

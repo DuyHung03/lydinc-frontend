@@ -5,7 +5,7 @@ export type User = {
     username: string;
     photoUrl: string;
     phone: string | null;
-    university: University;
+    universityId: number;
     isPasswordFirstChanged: number;
     isAccountGranted: number;
     roles: string[];
@@ -77,4 +77,5 @@ export type Lesson = {
     type: number;
     text: string | null;
     url: string | null;
+    fileName: string | null;
 };
