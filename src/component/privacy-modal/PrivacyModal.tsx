@@ -1,5 +1,6 @@
-import { Divider, Modal } from '@mantine/core';
+import { Divider, Modal, Tabs, TabsList, TabsPanel } from '@mantine/core';
 import { Lock, Public } from '@mui/icons-material';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
@@ -7,6 +8,7 @@ import { useFetchCoursePrivacy } from '../../hook/useFetchCoursePrivacy';
 import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
 import { usePrivacyModal } from '../../hook/usePrivacyModal';
 import axiosInstance from '../../network/httpRequest';
+import { User } from '../../types/types';
 
 interface PrivacyModalProps {
     courseId: number | null;
@@ -20,11 +22,14 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
         privacy,
         selectedUniversityIds,
         uncheckUniversityIds,
+        selectedUserIds,
+        setSelectedUserIds,
         setPrivacy,
         setInitialUniversityIds,
         setSelectedUniversityIds,
         onPrivacyChange,
-        onCheckboxChange,
+        onUniversityCheckboxChange,
+        onUserCheckboxChange,
     } = usePrivacyModal();
 
     const {
@@ -36,6 +41,16 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
 
     const { data: universities } = useFetchingUniversities();
 
+    const fetchStudents = async () => {
+        const res = await axiosInstance.get('/user/get-all-student');
+        return res.data;
+    };
+
+    const { data: students } = useQuery<User[]>({
+        queryKey: ['students'],
+        queryFn: fetchStudents,
+    });
+
     // const [isLoading, setIsLoading] = useState(loading);
 
     useEffect(() => {
@@ -46,11 +61,20 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
 
     useEffect(() => {
         if (coursePrivacy) {
+            console.log(coursePrivacy);
+
             setPrivacy(coursePrivacy.privacy);
             setSelectedUniversityIds(coursePrivacy.universityIds);
             setInitialUniversityIds(coursePrivacy.universityIds);
+            setSelectedUserIds(coursePrivacy.userIds);
         }
-    }, [coursePrivacy, setPrivacy, setSelectedUniversityIds, setInitialUniversityIds]);
+    }, [
+        coursePrivacy,
+        setPrivacy,
+        setSelectedUniversityIds,
+        setInitialUniversityIds,
+        setSelectedUserIds,
+    ]);
 
     const onSavePrivacy = async () => {
         try {
@@ -60,6 +84,7 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
                 courseId,
                 universityIds: selectedUniversityIds,
                 deleteUniversityIds: uncheckUniversityIds,
+                userIds: selectedUserIds,
             };
             console.log(requestData);
 
@@ -136,30 +161,69 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
                         view and learn from it.
                     </p>
                 ) : (
-                    <div className='flex flex-col'>
-                        <p className='mb-4 text-gray-600'>
-                            Select the universities that can access and learn from this course.
-                        </p>
-                        <p className='font-semibold mb-2'>Who has access</p>
-                        <div className='max-h-80 overflow-y-scroll'>
-                            {universities?.map((university) => (
-                                <div
-                                    key={university.universityId}
-                                    className='w-full flex gap-3 items-center px-2 py-2'
-                                >
-                                    <input
-                                        checked={selectedUniversityIds.includes(
-                                            university.universityId
-                                        )}
-                                        className='w-4 h-4 cursor-pointer'
-                                        onChange={onCheckboxChange}
-                                        type='checkbox'
-                                        value={university.universityId}
-                                    />
-                                    <p>{university.fullName}</p>
+                    <div>
+                        <Tabs defaultValue={'universities'}>
+                            <TabsList grow>
+                                <Tabs.Tab value='universities'>Universities</Tabs.Tab>
+                                <Tabs.Tab value='users'>Users</Tabs.Tab>
+                            </TabsList>
+                            <TabsPanel value='universities'>
+                                <div className='my-4'>
+                                    <p className='mb-4 text-gray-600'>
+                                        Select the <b>UNIVERSITIES</b> that can access and learn
+                                        from this course.
+                                    </p>
+                                    <p className='font-semibold mb-2'>Who has access</p>
+                                    <div className='max-h-80 overflow-y-scroll'>
+                                        {universities?.map((university) => (
+                                            <div
+                                                key={university.universityId}
+                                                className='w-full flex gap-3 items-center px-2 py-2'
+                                            >
+                                                <input
+                                                    checked={selectedUniversityIds.includes(
+                                                        university.universityId
+                                                    )}
+                                                    className='w-4 h-4 cursor-pointer'
+                                                    onChange={onUniversityCheckboxChange}
+                                                    type='checkbox'
+                                                    value={university.universityId}
+                                                />
+                                                <p>{university.fullName}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+                            </TabsPanel>
+                            <TabsPanel value='users'>
+                                <div className='my-4'>
+                                    <p className='mb-4 text-gray-600'>
+                                        Select the <b>USERS</b> that can access and learn from this
+                                        course.
+                                    </p>
+                                    <p className='font-semibold mb-2'>Who has access</p>
+                                    <div className='max-h-80 overflow-y-scroll'>
+                                        {students?.map((student) => (
+                                            <div
+                                                key={student.userId}
+                                                className='w-full flex gap-3 items-center px-2 py-2'
+                                            >
+                                                <input
+                                                    checked={selectedUserIds.includes(
+                                                        student.userId
+                                                    )}
+                                                    className='w-4 h-4 cursor-pointer'
+                                                    onChange={onUserCheckboxChange}
+                                                    type='checkbox'
+                                                    value={student.userId}
+                                                />
+                                                <p>{student.username}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </TabsPanel>
+                        </Tabs>
                     </div>
                 )}
                 <Divider className='my-4' />

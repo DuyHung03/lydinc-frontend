@@ -1,19 +1,16 @@
-import { Group, Text } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
 function Forbiden() {
     return (
-        <Group h={'100vh'} w={'100%'} justify='center' align='center'>
-            <Group w={'100%'}>
-                <Text size='100px' c={'gray'} fw={'bold'}>
-                    403
-                </Text>
-                <Text c={'gray'}>Forbiden</Text>
-            </Group>
+        <div className='w-screen h-screen flex justify-center items-center flex-col gap-7'>
+            <div className='flex justify-center items-center gap-3 text-gray-400'>
+                <h1 className='font-extrabold text-9xl'>403</h1>
+                <p className='text-2xl'>You are not allowed!</p>
+            </div>
             <Link to={'/'} className='primary-btn'>
                 Go back to home page
             </Link>
-        </Group>
+        </div>
     );
 }
 

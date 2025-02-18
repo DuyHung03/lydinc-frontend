@@ -2,7 +2,7 @@ import { Email, Phone, Place } from '@mui/icons-material';
 import logo from '../../assets/logo_1.png';
 function Footer() {
     return (
-        <div className='flex flex-col border-t border-primary border-solid'>
+        <div className='flex flex-col border-t border-primary border-solid bg-white'>
             <div className='flex justify-center items-center'>
                 <div className='grid grid-cols-3 w-1200 justify-between gap-4 py-4 '>
                     <div className='flex flex-col gap-4 justify-start'>

@@ -49,13 +49,6 @@ export type Module = {
     parentModuleId: string;
 };
 
-export type Lesson = {
-    lessonId: string;
-    lessonTitle: string;
-    lessonContent: string;
-    module: Module;
-};
-
 export type StudentAccount = {
     username: string | null;
     falcuty: string | null;
@@ -75,4 +68,13 @@ export type CoursePrivacy = {
     courseId: number;
     privacy: string;
     universityIds: number[];
+    userIds: string[];
+};
+
+export type Lesson = {
+    lessonId: string;
+    index: number;
+    type: number;
+    text: string | null;
+    url: string | null;
 };

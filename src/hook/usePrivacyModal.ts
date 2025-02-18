@@ -6,6 +6,7 @@ export function usePrivacyModal(initialPrivacy = 'public') {
     const [selectedUniversityIds, setSelectedUniversityIds] = useState<number[]>([]);
     const [initialUniversityIds, setInitialUniversityIds] = useState<number[]>([]);
     const [uncheckUniversityIds, setUncheckUniversityIds] = useState<number[]>([]);
+    const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
     const openModal = () => setOpened(true);
     const closeModal = () => setOpened(false);
@@ -14,7 +15,7 @@ export function usePrivacyModal(initialPrivacy = 'public') {
         setPrivacy(e.target.value);
     };
 
-    const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onUniversityCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = e.target;
         const universityId = Number(value);
 
@@ -32,6 +33,14 @@ export function usePrivacyModal(initialPrivacy = 'public') {
             }
         });
     };
+    const onUserCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, checked } = e.target;
+        const userId = value;
+
+        setSelectedUserIds((prev) =>
+            checked ? [...prev, userId] : prev.filter((id) => id !== userId)
+        );
+    };
 
     return {
         opened,
@@ -39,6 +48,8 @@ export function usePrivacyModal(initialPrivacy = 'public') {
         selectedUniversityIds,
         uncheckUniversityIds,
         initialUniversityIds,
+        selectedUserIds,
+        setSelectedUserIds,
         setInitialUniversityIds,
         setUncheckUniversityIds,
         setPrivacy,
@@ -46,6 +57,7 @@ export function usePrivacyModal(initialPrivacy = 'public') {
         openModal,
         closeModal,
         onPrivacyChange,
-        onCheckboxChange,
+        onUniversityCheckboxChange,
+        onUserCheckboxChange,
     };
 }

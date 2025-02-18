@@ -3,7 +3,7 @@ import Header from '../../component/header/Header';
 import SideBar from '../../component/side-bar/SideBar';
 function SideBarCourseLayout() {
     return (
-        <div className='flex flex-col h-screen w-full'>
+        <div className='flex flex-col relative h-screen w-full'>
             <div className='fixed z-50 top-0'>
                 <Header />
             </div>
@@ -20,7 +20,7 @@ function SideBarCourseLayout() {
                         <SideBar />
                     </div>
                 </div>
-                <main className='h-screen grow mt-headerHeight'>
+                <main className='h-screen flex justify-center grow mt-headerHeight'>
                     <Outlet />
                 </main>
             </div>
