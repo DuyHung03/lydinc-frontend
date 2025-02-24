@@ -1,9 +1,55 @@
 import { Avatar, Menu } from '@mantine/core';
 import { Logout, Notifications } from '@mui/icons-material';
+import { useEffect, useRef, useState } from 'react';
 import useAuthStore from '../../store/useAuthStore';
+import { Noti } from '../../types/types';
+import Notification from '../notification/Notification';
 
 function HeaderUserMenu() {
     const { user, logout } = useAuthStore();
+    const [notifications, setNotifications] = useState<Noti[]>([]);
+    const socketRef = useRef<WebSocket | null>(null);
+
+    useEffect(() => {
+        const connectWebSocket = () => {
+            const ws = new WebSocket(`ws://localhost:8080/api/notifications`);
+            socketRef.current = ws;
+
+            ws.onopen = () => {
+                console.log('Connected to WebSocket');
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const parsedMessage = JSON.parse(event.data);
+                    setNotifications((prev) => [...prev, parsedMessage]);
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
+                }
+            };
+
+            ws.onclose = (event) => {
+                console.warn('WebSocket closed, attempting to reconnect...', event.reason);
+                setTimeout(connectWebSocket, 5000);
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        };
+
+        connectWebSocket();
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.close();
+                socketRef.current.onmessage = null;
+                socketRef.current.onclose = null;
+                socketRef.current.onerror = null;
+            }
+        };
+    }, [user?.userId]);
+
     const handleLogout = () => {
         logout();
         window.location.replace('/login');
@@ -16,7 +62,7 @@ function HeaderUserMenu() {
                 </Menu.Target>
                 <Menu.Dropdown>
                     <Menu.Item>
-                        <p>Empty!</p>
+                        <Notification noti={notifications} />
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>

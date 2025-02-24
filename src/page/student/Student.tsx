@@ -36,7 +36,7 @@ function Student() {
                 <div className='w-full grid grid-cols-3 gap-7'>
                     {courses &&
                         courses?.map((course) => (
-                            <Link to={`/student/course/${course.courseId}/`}>
+                            <Link key={course.courseId} to={`/student/course/${course.courseId}/`}>
                                 <CourseItem course={course} />
                             </Link>
                         ))}

@@ -79,3 +79,10 @@ export type Lesson = {
     url: string | null;
     fileName: string | null;
 };
+
+export type Noti = {
+    id: string;
+    title: string;
+    message: string;
+    date: string;
+};
