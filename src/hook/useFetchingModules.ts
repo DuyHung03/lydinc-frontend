@@ -15,7 +15,7 @@ export const useFetchingModules = (courseId?: number) => {
         queryKey: ['modules', courseId],
         queryFn: getModules,
         enabled: !!courseId,
-        // staleTime: 60000, // 1 minutes
+        staleTime: 60000, // 1 minutes
         gcTime: 300000, // 5 minutes
     });
 };

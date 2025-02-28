@@ -7,14 +7,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import logo from '../../assets/logo_1.png';
 import axiosInstance from '../../network/httpRequest';
-import useAuthStore from '../../store/useAuthStore';
 
 function ChangePassword() {
     const [opened, { close }] = useDisclosure(true);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const { user } = useAuthStore();
     const changePasswordSchema = z
         .object({
             newPassword: z
@@ -50,7 +48,6 @@ function ChangePassword() {
                 {},
                 {
                     params: {
-                        userId: user?.userId,
                         newPassword: data.newPassword,
                     },
                 }

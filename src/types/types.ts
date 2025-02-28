@@ -6,6 +6,7 @@ export type User = {
     photoUrl: string;
     phone: string | null;
     universityId: number;
+    universityName: string;
     isPasswordFirstChanged: number;
     isAccountGranted: number;
     roles: string[];
@@ -78,4 +79,13 @@ export type Lesson = {
     text: string | null;
     url: string | null;
     fileName: string | null;
+};
+
+export type Noti = {
+    id: string;
+    title: string;
+    message: string;
+    type: number;
+    isSeen: boolean;
+    date: string;
 };

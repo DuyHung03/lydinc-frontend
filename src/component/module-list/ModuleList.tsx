@@ -21,6 +21,7 @@ export default function ModuleList({
             <div>
                 {modules
                     .filter((module) => module.level === 0 && module.status != 'deleted')
+                    .sort((a, b) => a.index - b.index)
                     .map((module) => (
                         <ModuleInput
                             key={module.moduleId}

@@ -34,6 +34,31 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
     const queryClient = useQueryClient();
     const { data } = useFetchingModules(Number(courseId));
 
+    const recalculateIndexes = (modules: Module[]): Module[] => {
+        let moduleIndex = 1;
+        return modules
+            .filter((m) => m.status !== 'deleted')
+            .sort((a, b) => a.index - b.index) // Sort by existing index
+            .map((module) => {
+                if (module.level === 0) {
+                    const newModule = { ...module, index: moduleIndex++ };
+                    let lessonIndex = 1;
+                    const updatedLessons = modules
+                        .filter(
+                            (lesson) =>
+                                lesson.parentModuleId === module.moduleId && lesson.level === 1
+                        )
+                        .sort((a, b) => a.index - b.index)
+                        .map((lesson) => ({ ...lesson, index: lessonIndex++ }));
+
+                    return [newModule, ...updatedLessons];
+                }
+                return null;
+            })
+            .flat()
+            .filter(Boolean) as Module[];
+    };
+
     useEffect(() => {
         if (mode === 'edit' && courseId) {
             if (data) {
@@ -82,14 +107,14 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
     const addModule = () => {
         const newModuleId = v4();
         const newLessonId = v4();
-        setModules((prev) => [
-            ...prev,
+        const updatedModules = [
+            ...modules,
             {
                 moduleId: newModuleId,
                 moduleTitle: '',
                 status: 'new',
                 level: 0,
-                index: prev.filter((m) => m.level === 0).length + 1,
+                index: modules.filter((m) => m.level === 0).length + 1,
                 parentModuleId: '',
             },
             {
@@ -97,26 +122,30 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
                 moduleTitle: '',
                 status: 'new',
                 level: 1,
-                index: prev.filter((l) => l.moduleId === newModuleId).length + 1,
+                index: 1, // First lesson for this module
                 parentModuleId: newModuleId,
             },
-        ]);
+        ];
+        setModules(recalculateIndexes(updatedModules));
     };
 
     const addLesson = (parentModuleId: string) => {
-        setModules((prev) => [
-            ...prev,
-            {
-                moduleId: v4(),
-                moduleTitle: '',
-                status: 'new',
-                level: 1,
-                index:
-                    prev.filter((m) => m.level === 1 && m.parentModuleId === parentModuleId)
-                        .length + 1,
-                parentModuleId,
-            },
-        ]);
+        setModules((prev) => {
+            const updatedModules = [
+                ...prev,
+                {
+                    moduleId: v4(),
+                    moduleTitle: '',
+                    status: 'new',
+                    level: 1,
+                    index:
+                        prev.filter((m) => m.level === 1 && m.parentModuleId === parentModuleId)
+                            .length + 1,
+                    parentModuleId,
+                },
+            ];
+            return recalculateIndexes(updatedModules);
+        });
     };
 
     const onChangeTitle = (moduleId: string, newTitle: string) => {
@@ -177,29 +206,30 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
     };
 
     const deleteModule = (moduleId: string) => {
-        setModules((prev) =>
-            prev
+        setModules((prev) => {
+            const updatedModules = prev
                 .map((module) => {
-                    if (module.moduleId === moduleId) {
-                        // If the module is newly created, remove it entirely
+                    if (module.moduleId === moduleId || module.parentModuleId === moduleId) {
                         return module.status === 'new' ? null : { ...module, status: 'deleted' };
                     }
                     return module;
                 })
-                .filter((module): module is Module => module !== null)
-        );
+                .filter((module): module is Module => module !== null);
+
+            return recalculateIndexes(updatedModules);
+        });
     };
 
     const updateModules = async (courseId: number) => {
+        const updatedModules = recalculateIndexes(modules.filter((m) => m.status !== 'deleted'));
+
         const changes = {
             courseId,
             title,
-            createdModules: modules.filter((m) => m.status === 'new'),
-            updatedModules: modules.filter((m) => m.status === 'updated'),
-            deletedModuleIds: modules.filter((m) => m.status === 'deleted').map((m) => m.moduleId),
+            modules: updatedModules,
         };
 
-        console.log('Changes:', changes); // Log changes to verify
+        console.log('Final modules sent to backend:', changes);
 
         try {
             setIsLoading(true);

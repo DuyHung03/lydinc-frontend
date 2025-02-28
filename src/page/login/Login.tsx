@@ -7,8 +7,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import logo from '../../assets/logo_2.png';
 import axiosInstance from '../../network/httpRequest';
-import useAuthStore from '../../store/useAuthStore';
-import { User } from '../../types/types';
 const loginSchema = z.object({
     username: z.string().min(4, 'Invalid username').default(''),
     password: z.string().min(4, 'Invalid password').default(''),
@@ -17,7 +15,6 @@ const loginSchema = z.object({
 type LoginSchema = z.infer<typeof loginSchema>;
 
 function Login() {
-    const { login } = useAuthStore();
     const {
         register,
         handleSubmit,
@@ -34,15 +31,9 @@ function Login() {
         try {
             setLoading(true);
             const res = await axiosInstance.post('/auth/login', data);
+            console.log(res);
 
-            if (res.status === 200) {
-                const user: User = res.data.user;
-                if (user.isAccountGranted == 1 && user.isPasswordFirstChanged == 0) {
-                    login(user);
-                    window.location.replace('/change-password');
-                    return;
-                }
-                login(user);
+            if (res.status === 200 && res.data) {
                 window.location.replace('/');
             }
         } catch (error) {

@@ -49,6 +49,7 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
     const { data: students } = useQuery<User[]>({
         queryKey: ['students'],
         queryFn: fetchStudents,
+        staleTime: 600000,
     });
 
     // const [isLoading, setIsLoading] = useState(loading);

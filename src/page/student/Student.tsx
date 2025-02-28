@@ -11,7 +11,6 @@ function Student() {
     const getCourseByStudent = async () => {
         const res = await axiosInstance.get('/courses/courses-by-student', {
             params: {
-                studentId: user?.userId,
                 universityId: user?.universityId,
             },
         });
@@ -22,9 +21,8 @@ function Student() {
     const { data: courses } = useQuery<Course[]>({
         queryKey: ['course', user?.userId],
         queryFn: getCourseByStudent,
+        gcTime: 300000,
     });
-
-    console.log(courses);
 
     return (
         <div className='w-full flex justify-center items-center'>
@@ -36,7 +34,7 @@ function Student() {
                 <div className='w-full grid grid-cols-3 gap-7'>
                     {courses &&
                         courses?.map((course) => (
-                            <Link to={`/student/course/${course.courseId}/`}>
+                            <Link key={course.courseId} to={`/student/course/${course.courseId}/`}>
                                 <CourseItem course={course} />
                             </Link>
                         ))}
