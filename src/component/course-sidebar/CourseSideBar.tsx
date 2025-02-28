@@ -18,40 +18,43 @@ function CourseSideBar() {
                 {modulesResponse?.courseTitle}
             </h3>
             <hr className='mb-3' />
-            {modulesResponse?.modules?.map((parentModule) =>
-                parentModule.level === 0 ? (
-                    <NavLink
-                        key={parentModule.moduleId}
-                        label={parentModule.moduleTitle}
-                        active={isActive(parentModule.moduleTitle)}
-                        color='#b39858'
-                        c={isActive(parentModule.moduleTitle) ? '#b39858' : 'black'}
-                        fw={500}
-                        defaultOpened={true}
-                        childrenOffset={0}
-                    >
-                        {modulesResponse?.modules
-                            .filter(
-                                (childModule) =>
-                                    childModule.parentModuleId === parentModule.moduleId
-                            )
-                            .map((childModule) => (
-                                <Link
-                                    key={childModule.moduleId}
-                                    className={clsx(
-                                        'w-full my-2 py-2 px-4 duration-150 block overflow-hidden text-ellipsis pl-8 hover:bg-slate-500 hover:text-white text-sm',
-                                        isActive(childModule.moduleTitle) &&
-                                            'underline text-primary'
-                                    )}
-                                    to={`/student/course/${courseId}/${parentModule.moduleTitle}/${childModule.moduleTitle}`}
-                                    state={childModule}
-                                >
-                                    {childModule.moduleTitle}
-                                </Link>
-                            ))}
-                    </NavLink>
-                ) : null
-            )}
+            {modulesResponse?.modules
+                ?.sort((a, b) => a.index - b.index)
+                .map((parentModule) =>
+                    parentModule.level === 0 ? (
+                        <NavLink
+                            key={parentModule.moduleId}
+                            label={parentModule.moduleTitle}
+                            active={isActive(parentModule.moduleTitle)}
+                            color='#b39858'
+                            c={isActive(parentModule.moduleTitle) ? '#b39858' : 'black'}
+                            fw={500}
+                            defaultOpened={true}
+                            childrenOffset={0}
+                        >
+                            {modulesResponse?.modules
+                                .filter(
+                                    (childModule) =>
+                                        childModule.parentModuleId === parentModule.moduleId
+                                )
+                                .sort((a, b) => a.index - b.index)
+                                .map((childModule) => (
+                                    <Link
+                                        key={childModule.moduleId}
+                                        className={clsx(
+                                            'w-full my-2 py-2 px-4 duration-150 block overflow-hidden text-ellipsis pl-8 hover:bg-slate-500 hover:text-white text-sm',
+                                            isActive(childModule.moduleTitle) &&
+                                                'underline text-primary'
+                                        )}
+                                        to={`/student/course/${courseId}/${parentModule.moduleTitle}/${childModule.moduleTitle}`}
+                                        state={{ parentModule, childModule }}
+                                    >
+                                        {childModule.moduleTitle}
+                                    </Link>
+                                ))}
+                        </NavLink>
+                    ) : null
+                )}
         </div>
     );
 }

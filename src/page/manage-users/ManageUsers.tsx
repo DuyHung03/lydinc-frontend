@@ -5,17 +5,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../../component/page-header/PageHeader';
 import axiosInstance from '../../network/httpRequest';
-import useAuthStore from '../../store/useAuthStore';
 import { User } from '../../types/types';
 
 function ManageUsers() {
-    const { user } = useAuthStore();
     const [pageNo, setPageNo] = useState(1);
 
     const getUsers = async () => {
         const res = await axiosInstance.get('user/get-all', {
             params: {
-                adminId: user?.userId,
                 pageNo: pageNo - 1,
                 pageSize: 10,
             },
@@ -114,12 +111,12 @@ function ManageUsers() {
                                                 {user.email}
                                             </td>
                                             <Tooltip
-                                                label={user.university.fullName}
+                                                label={'user.university.fullName'}
                                                 transitionProps={{ duration: 200, enterDelay: 200 }}
                                                 color='gray'
                                             >
                                                 <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
-                                                    {user.university.shortName}
+                                                    {'user.university.shortName'}
                                                 </td>
                                             </Tooltip>
                                             <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>

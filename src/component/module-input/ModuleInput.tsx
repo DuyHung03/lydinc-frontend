@@ -17,9 +17,11 @@ export default function ModuleInput({
     deleteModule: (moduleId: string) => void;
     errors: Record<string, string>;
 }) {
-    const lessons = modules.filter(
-        (m) => m.level == 1 && m.status != 'deleted' && m.parentModuleId === module.moduleId
-    );
+    const lessons = modules
+        .filter(
+            (m) => m.level == 1 && m.status != 'deleted' && m.parentModuleId === module.moduleId
+        )
+        .sort((a, b) => a.index - b.index);
 
     return (
         <div className='py-4'>

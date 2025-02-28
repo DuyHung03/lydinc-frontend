@@ -4,8 +4,6 @@ import clsx from 'clsx';
 import fallback from '../../assets/course-fallback.jpeg';
 import { Course } from '../../types/types';
 function CourseItem({ course }: { course: Course }) {
-    console.log(course);
-
     return (
         <div className='w-full rounded-lg shadow-xl'>
             <img

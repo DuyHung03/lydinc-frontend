@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import axiosInstance from '../../network/httpRequest';
 import useAuthStore from '../../store/useAuthStore';
 import { User } from '../../types/types';
@@ -9,21 +10,18 @@ function Home() {
     const { data } = useQuery<User>({
         queryKey: ['user', user?.userId],
         queryFn: async () => {
-            const res = await axiosInstance.get('/user/get-user-info', {
-                params: {
-                    userId: user?.userId,
-                },
-                withCredentials: true,
-            });
+            const res = await axiosInstance.get('/user/get-user-info');
             return res.data;
         },
         gcTime: 6000000,
         enabled: !user,
     });
 
-    if (data) {
-        login(data);
-    }
+    useEffect(() => {
+        if (data) {
+            login(data);
+        }
+    }, [data, login]);
 
     return (
         <div className='w-screen'>

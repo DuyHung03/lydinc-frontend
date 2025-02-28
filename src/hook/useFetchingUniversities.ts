@@ -11,6 +11,7 @@ export const useFetchingUniversities = () => {
     return useQuery<University[]>({
         queryKey: ['universities'],
         queryFn: getUniversities,
+        staleTime: 600000,
         gcTime: 600000, // Cache: 10 minutes,
     });
 };

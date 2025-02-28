@@ -24,14 +24,14 @@ function EditCourse() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const module = location.state as Module | null;
     const navigate = useNavigate();
-    console.log(components);
+    console.log(module);
 
     const {
         data: lessonData,
         // isLoading,
         isError,
         error,
-    } = useFetchLessonData({ module });
+    } = useFetchLessonData({ module, courseId: Number(courseId) });
 
     function validateLessonData() {
         const newErrors: Record<string, string> = {};
@@ -182,6 +182,7 @@ function EditCourse() {
                 >
                     {components
                         .filter((component) => component.type !== 4)
+                        .sort((a, b) => a.index - b.index)
                         .map((component) => (
                             <SortableItem key={component.lessonId}>
                                 <div className='sortable-item flex justify-center items-center gap-3'>
@@ -221,9 +222,8 @@ function EditCourse() {
                         ))}
                 </SortableList>
                 <hr className='mb-5' />
-                {lessonData && lessonData.length > 0 && (
-                    <DocumentsUpload components={components} setComponents={setComponents} />
-                )}
+
+                <DocumentsUpload components={components} setComponents={setComponents} />
 
                 <div className='w-full flex justify-center items-center gap-4'>
                     <button
