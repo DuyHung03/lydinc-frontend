@@ -45,7 +45,6 @@ axiosInstance.interceptors.response.use(
 
             try {
                 await refreshAccessToken();
-                // Retry the request without modifying headers (cookies will be sent automatically)
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
                 return Promise.reject(refreshError);

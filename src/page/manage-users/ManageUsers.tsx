@@ -43,15 +43,16 @@ function ManageUsers() {
                 {error && (
                     <div className='w-full flex justify-center items-center h-64'>
                         <Alert title='Error' color='red'>
-                            Failed to fetch users. Please try again later.
+                            Something went wrong, Please try again later!
                         </Alert>
                     </div>
                 )}
-                {isLoading ? (
+                {isLoading && (
                     <div className='w-full flex justify-center items-center h-64'>
                         <Loader color='blue' size='lg' />
                     </div>
-                ) : (
+                )}
+                {data && !error && (
                     <>
                         {/* Users Table */}
                         <div className='w-full overflow-x-auto'>

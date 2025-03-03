@@ -1,4 +1,4 @@
-import { Loader, Modal, Tooltip } from '@mantine/core';
+import { Alert, Loader, Modal, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,7 @@ import NewUniversity from '../new-uni/NewUniversity';
 
 function ManageUniversity() {
     // Fetch universities data from API
-    const { data: universities, isLoading, refetch } = useFetchingUniversities();
+    const { data: universities, isLoading, refetch, isError } = useFetchingUniversities();
 
     // Manage modal state using useDisclosure
     const [opened, { open, close }] = useDisclosure(false);
@@ -28,11 +28,12 @@ function ManageUniversity() {
                     <Add fontSize='small' />
                     Add new university
                 </button>
-                {isLoading ? (
+                {isLoading && (
                     <div className='w-full flex justify-center items-center'>
                         <Loader />
                     </div>
-                ) : (
+                )}
+                {universities && !isError && (
                     <table className='w-full border-gray-300 border border-solid'>
                         <thead>
                             <tr>
@@ -135,6 +136,11 @@ function ManageUniversity() {
                             ))}
                         </tbody>
                     </table>
+                )}
+                {isError && (
+                    <Alert title='Error' color='red'>
+                        Something went wrong, Please try again later!
+                    </Alert>
                 )}
             </div>
 

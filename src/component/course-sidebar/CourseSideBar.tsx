@@ -1,4 +1,4 @@
-import { NavLink } from '@mantine/core';
+import { NavLink, Skeleton } from '@mantine/core';
 import clsx from 'clsx';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useFetchingModules } from '../../hook/useFetchingModules';
@@ -11,13 +11,22 @@ function CourseSideBar() {
     };
 
     //Get the menu for the sidebar
-    const { data: modulesResponse } = useFetchingModules(Number(courseId));
+    const { data: modulesResponse, isLoading } = useFetchingModules(Number(courseId));
     return (
         <div className='h-full overflow-y-scroll py-5 border-r border-solid border-gray-200'>
             <h3 className='text-lg font-semibold text-gray-600 p-3'>
                 {modulesResponse?.courseTitle}
             </h3>
             <hr className='mb-3' />
+            {isLoading && (
+                <div className='flex gap-5 w-full flex-col px-4'>
+                    <Skeleton w={'100%'} h={36} visible={true} />
+                    <Skeleton w={'100%'} h={36} visible={true} />
+                    <Skeleton w={'100%'} h={36} visible={true} />
+                    <Skeleton w={'100%'} h={36} visible={true} />
+                    <Skeleton w={'100%'} h={36} visible={true} />
+                </div>
+            )}
             {modulesResponse?.modules
                 ?.sort((a, b) => a.index - b.index)
                 .map((parentModule) =>

@@ -1,4 +1,4 @@
-import { Divider, NavLink } from '@mantine/core';
+import { Divider, NavLink, Skeleton } from '@mantine/core';
 import { Edit, LockPerson } from '@mui/icons-material';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ function SideBar() {
     const { pathname } = useLocation();
 
     //Get the menu for the sidebar
-    const { data: modulesResponse } = useFetchingModules(Number(courseId));
+    const { data: modulesResponse, isLoading } = useFetchingModules(Number(courseId));
 
     const isActive = (path: string) => {
         return pathname.includes(encodeURIComponent(path));
@@ -38,6 +38,15 @@ function SideBar() {
                     </button>
                     <Divider w={'100%'} h={1} mt={12} mb={20} />
                 </>
+            )}
+            {isLoading && (
+                <div className='flex gap-5 w-full flex-col px-4'>
+                    <Skeleton w={'100%'} h={36} />
+                    <Skeleton w={'100%'} h={36} />
+                    <Skeleton w={'100%'} h={36} />
+                    <Skeleton w={'100%'} h={36} />
+                    <Skeleton w={'100%'} h={36} />
+                </div>
             )}
             {modulesResponse?.modules
                 ?.sort((a, b) => a.index - b.index)

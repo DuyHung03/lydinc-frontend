@@ -1,14 +1,13 @@
+import { Alert } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CourseDocument from '../../component/course-document/CourseDocument';
 import { useFetchingModules } from '../../hook/useFetchingModules';
 import { useFetchLessonData } from '../../hook/useFetchLessonData';
 import axiosInstance from '../../network/httpRequest';
-import useAuthStore from '../../store/useAuthStore';
 import { Module } from '../../types/types';
 
 function CourseDetails() {
-    const { user } = useAuthStore();
     const { courseId } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const location = useLocation();
@@ -42,7 +41,11 @@ function CourseDetails() {
         }
     }, [data, childModule, courseId, navigate]);
 
-    const { data: lessonData, isError } = useFetchLessonData({
+    const {
+        data: lessonData,
+        isError,
+        error,
+    } = useFetchLessonData({
         module: childModule,
         courseId: Number(courseId),
     });
@@ -52,14 +55,17 @@ function CourseDetails() {
             setIsLoading(true);
             const res = await axiosInstance.get('/practice-link/get-practice-link', {
                 params: {
-                    username: user?.username,
-                    universityShortName: user?.universityName,
+                    courseId: Number(courseId),
+                    moduleId: parentModule?.moduleId,
+                    lessonId: childModule?.moduleId,
                     moduleIndex: parentModule?.index,
                     lessonIndex: childModule?.index,
                 },
             });
 
-            if (res.status === 200) {
+            if (res.status === 200 && res.data != '') {
+                console.log(res);
+
                 window.open(res.data, '_blank');
             } else {
                 console.error('Error fetching practice link');
@@ -72,17 +78,23 @@ function CourseDetails() {
     };
 
     useEffect(() => {
-        if (isError) {
+        if (isError && error.message === "You're not allowed to access the course") {
             navigate('/not-allowed');
         }
-    }, [isError, navigate]);
+    }, [isError, navigate, error]);
 
     return (
         <div className='p-4 mb-28'>
-            <h1 className='w-full text-2xl font-semibold text-gray-600'>
-                {childModule?.moduleTitle || 'Lesson'}
+            <h1 className='w-full text-2xl font-semibold text-red-800'>
+                {childModule?.moduleTitle || 'N/A'}
             </h1>
             <hr className='my-5' />
+
+            {isError && (
+                <Alert title='Error' color='red'>
+                    Something went wrong!.
+                </Alert>
+            )}
 
             {lessonData && lessonData?.length > 0 ? (
                 <>

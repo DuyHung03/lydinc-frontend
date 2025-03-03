@@ -138,7 +138,9 @@ function EditCourse() {
             <div style={{ width: '900px' }}>
                 {/* {isLoading && <LoadingOverlay visible />} */}
                 <div className='w-full flex flex-col justify-center items-center'>
-                    <p className='w-full font-semibold text-xl'>{module?.moduleTitle}</p>
+                    <p className='w-full font-semibold text-2xl text-red-800'>
+                        {module?.moduleTitle}
+                    </p>
                     {isError && <p className='text-red-500'>{error.message}</p>}
                     <hr className='w-full my-6 h-0.5' />
                 </div>
