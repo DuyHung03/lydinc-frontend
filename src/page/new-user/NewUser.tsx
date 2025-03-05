@@ -82,13 +82,21 @@ const NewUser = () => {
                         icon={<InfoOutlined fontSize='small' />}
                         className='w-96 m-auto'
                     >
-                        This account has been created by an administrator. Please complete the form
-                        below to provide the required details.
-                        <br /> Once the account is successfully created, a confirmation email will
-                        be sent to the email address provided in the form.
+                        <li>
+                            This account has been created by an administrator. Please complete the
+                            form below to provide the required details.
+                        </li>
+                        <li>
+                            Once the account is successfully created, a confirmation email will be
+                            sent to the email address provided in the form.
+                        </li>
                     </Alert>
                 </div>
-                {isError && <div>Error fetching universities.</div>}
+                {isError && (
+                    <Alert mt={30} title='Error' color='red'>
+                        Something went wrong, Please try again later!
+                    </Alert>
+                )}
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className='max-w-lg mx-auto bg-white p-6 space-y-4'

@@ -68,10 +68,16 @@ function CourseDetails() {
 
                 window.open(res.data, '_blank');
             } else {
+                <Alert title='Error' color='red'>
+                    File not found!
+                </Alert>;
                 console.error('Error fetching practice link');
             }
         } catch (error) {
             console.error('Failed to get practice link:', error);
+            <Alert title='Error' color='red'>
+                Something went wrong!.
+            </Alert>;
         } finally {
             setIsLoading(false);
         }

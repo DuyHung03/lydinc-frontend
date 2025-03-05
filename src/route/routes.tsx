@@ -15,6 +15,7 @@ import ManageUniversity from '../page/manage-uni/ManageUniversity';
 import ManageUsers from '../page/manage-users/ManageUsers';
 import NewUser from '../page/new-user/NewUser';
 import PageNotFound from '../page/not-found/PageNotFound';
+import Register from '../page/register/Register';
 import StudentUpload from '../page/student-upload/StudentUpload';
 import Student from '../page/student/Student';
 import UniversityDetails from '../page/uni-details/UniversityDetails';
@@ -30,7 +31,10 @@ export const publicRoutes: RouteObject[] = [
         path: 'login',
         element: <Login />,
     },
-
+    {
+        path: 'register',
+        element: <Register />,
+    },
     {
         path: 'not-allowed',
         element: <Forbiden />,
@@ -40,7 +44,7 @@ export const publicRoutes: RouteObject[] = [
         element: <PageNotFound />,
     },
     {
-        path: 'change-password',
+        path: 'reset-password',
         element: <MainLayout isFooter={false} isHeader={false} />,
         children: [
             {

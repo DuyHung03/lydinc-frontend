@@ -23,6 +23,8 @@ function Home() {
         }
     }, [data, login]);
 
+    // useFetchResetPwUrl();
+
     return (
         <div className='w-screen'>
             <div className='relative w-full'>

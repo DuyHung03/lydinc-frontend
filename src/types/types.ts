@@ -7,7 +7,7 @@ export type User = {
     phone: string | null;
     universityId: number;
     universityName: string;
-    isPasswordFirstChanged: number;
+    isPasswordChanged: number;
     isAccountGranted: number;
     roles: string[];
 };
@@ -88,4 +88,11 @@ export type Noti = {
     type: number;
     isSeen: boolean;
     date: string;
+};
+
+export type PaginationResponse<T> = {
+    data: T[];
+    total: number;
+    pageNo: number;
+    pageSize: number;
 };

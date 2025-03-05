@@ -1,35 +1,40 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, LoadingOverlay, Modal } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { InfoOutlined, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Alert, LoadingOverlay } from '@mantine/core';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { z } from 'zod';
 import logo from '../../assets/logo_1.png';
 import axiosInstance from '../../network/httpRequest';
 
+const changePasswordSchema = z
+    .object({
+        newPassword: z
+            .string()
+            .min(8, 'Password must be at least 8 characters long')
+            .max(255, 'Password is too long'),
+        confirmPassword: z
+            .string()
+            .min(8, 'Password must be at least 8 characters long')
+            .max(255, 'Password is too long'),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ['confirmPassword'],
+    });
+
+type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+
 function ChangePassword() {
-    const [opened, { close }] = useDisclosure(true);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const changePasswordSchema = z
-        .object({
-            newPassword: z
-                .string()
-                .min(8, 'Password must be at least 8 characters long')
-                .max(255, 'Password is too long'),
-            confirmPassword: z
-                .string()
-                .min(8, 'Password must be at least 8 characters long')
-                .max(255, 'Password is too long'),
-        })
-        .refine((data) => data.newPassword == data.confirmPassword, {
-            message: "Passwords don't match",
-            path: ['confirmPassword'],
-        });
-
-    type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
+    console.log(token);
 
     const {
         register,
@@ -49,18 +54,32 @@ function ChangePassword() {
                 {
                     params: {
                         newPassword: data.newPassword,
+                        token: token,
                     },
                 }
             );
             if (res.status === 200) {
-                window.location.replace('/');
+                Swal.fire({
+                    title: 'Success!',
+                    icon: 'success',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#b39858',
+                    didClose: () => {
+                        window.location.replace('/login');
+                    },
+                });
             } else {
                 setError('root', { message: 'Failed to update password' });
             }
-            setIsLoading(false);
         } catch (e) {
-            console.log(e);
-            setError('root', { message: 'Failed to update password' });
+            console.error(e);
+            if (axios.isAxiosError(e) && e.response) {
+                setError('root', {
+                    message: e.response.data || 'Failed to update password',
+                });
+            } else {
+                setError('root', { message: 'Failed to update password' });
+            }
         } finally {
             setIsLoading(false);
         }
@@ -73,7 +92,14 @@ function ChangePassword() {
                     <div className='w-full flex items-center justify-center'>
                         <img src={logo} className='w-48' alt='logo' />
                     </div>
-                    <h1 className='text-xl font-semibold'>Change your password</h1>
+                    <h1 className='text-xl font-semibold text-primary'>Change your password</h1>
+
+                    {/* Display error message if any */}
+                    {errors.root && (
+                        <Alert title='Error' w={300} color='red'>
+                            {errors.root.message}
+                        </Alert>
+                    )}
 
                     <form className='w-316 flex flex-col gap-4' onSubmit={handleSubmit(onSubmit)}>
                         {/* New Password */}
@@ -111,8 +137,9 @@ function ChangePassword() {
                                 </p>
                             )}
                         </div>
+
+                        {/* Confirm Password */}
                         <div>
-                            {/* Confirm Password */}
                             <label
                                 htmlFor='confirmPassword'
                                 className="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:text-red-500 after:ml-0.5"
@@ -146,8 +173,13 @@ function ChangePassword() {
                                 </p>
                             )}
                         </div>
-                        <button type='submit' className='primary-btn text-sm py-3'>
-                            Change password
+
+                        <button
+                            type='submit'
+                            disabled={isLoading}
+                            className='primary-btn text-sm py-3'
+                        >
+                            Submit
                         </button>
                     </form>
                 </div>
@@ -160,20 +192,7 @@ function ChangePassword() {
                 </div>
             </div>
 
-            {/* Notification and Loading */}
-
             <LoadingOverlay visible={isLoading} />
-            <Modal.Root opened={opened} onClose={close} centered>
-                <Modal.Overlay />
-                <Modal.Content>
-                    <Modal.Body p={0}>
-                        <Alert title={'NOTIFICATION'} icon={<InfoOutlined fontSize='small' />}>
-                            Welcome to the platform! As this is your first login, please ensure the
-                            security of your account by updating your password immediately.
-                        </Alert>
-                    </Modal.Body>
-                </Modal.Content>
-            </Modal.Root>
         </div>
     );
 }

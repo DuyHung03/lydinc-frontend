@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../../component/page-header/PageHeader';
 import axiosInstance from '../../network/httpRequest';
-import { User } from '../../types/types';
+import { PaginationResponse, User } from '../../types/types';
 
 function ManageUsers() {
     const [pageNo, setPageNo] = useState(1);
@@ -20,7 +20,7 @@ function ManageUsers() {
         return res.data;
     };
 
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error } = useQuery<PaginationResponse<User>>({
         queryKey: ['users', pageNo],
         queryFn: getUsers,
         placeholderData: keepPreviousData,
@@ -83,7 +83,7 @@ function ManageUsers() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data?.users?.map((user: User, index: number) => (
+                                    {data?.data?.map((user: User, index: number) => (
                                         <tr key={user.userId} className='hover:bg-gray-50'>
                                             <td className='border-gray-300 border-r border-solid px-6 py-4 text-center text-sm align-middle'>
                                                 {index + 1}
