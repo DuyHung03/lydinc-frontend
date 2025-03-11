@@ -55,7 +55,7 @@ function CourseSideBar() {
                                             isActive(childModule.moduleTitle) &&
                                                 'underline text-primary'
                                         )}
-                                        to={`/student/course/${courseId}/${parentModule.moduleTitle}/${childModule.moduleTitle}`}
+                                        to={`/learning/course/${courseId}/${parentModule.moduleTitle}/${childModule.moduleTitle}`}
                                         state={{ parentModule, childModule }}
                                     >
                                         {childModule.moduleTitle}

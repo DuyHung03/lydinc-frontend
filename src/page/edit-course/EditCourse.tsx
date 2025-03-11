@@ -134,8 +134,8 @@ function EditCourse() {
     }
 
     return (
-        <div className='p-5 absolute flex flex-col justify-center items-center'>
-            <div style={{ width: '900px' }}>
+        <div className='p-5 pt-8 flex flex-col justify-center items-center'>
+            <div className='w-full lg:w-860'>
                 {/* {isLoading && <LoadingOverlay visible />} */}
                 <div className='w-full flex flex-col justify-center items-center'>
                     <p className='w-full font-semibold text-2xl text-red-800'>
@@ -149,7 +149,7 @@ function EditCourse() {
                         <p className='text-center font-light italic'>Lesson's data is empty!</p>
                     </div>
                 )}
-                <div className='fixed flex flex-col right-3 top-28 p-4 text-gray-500 bg-white shadow-2xl border dura border-gray-300 rounded-2xl'>
+                <div className='fixed flex flex-col right-8 top-28 p-4 text-gray-500 bg-white shadow-2xl border dura border-gray-300 rounded-2xl'>
                     <Tooltip label='Add Text' openDelay={1000} bg={'gray'}>
                         <button
                             onClick={() => addComponent(1)}

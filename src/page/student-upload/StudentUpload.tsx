@@ -68,8 +68,8 @@ const StudentUpload = () => {
     }
 
     return (
-        <div className='w-full flex justify-center items-center py-4'>
-            <div className='w-1200 gap-8 flex flex-col'>
+        <div className='w-full flex justify-center items-center p-4 '>
+            <div className='w-full lg:w-1200 gap-8 flex flex-col'>
                 <PageHeader title='Upload student file (.xlsx, .csv)' />
                 {file ? (
                     <div className='w-full justify-center items-center flex'>

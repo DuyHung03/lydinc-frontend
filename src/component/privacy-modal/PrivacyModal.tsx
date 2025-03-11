@@ -42,7 +42,7 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
     const { data: universities } = useFetchingUniversities();
 
     const fetchStudents = async () => {
-        const res = await axiosInstance.get('/user/get-all-student');
+        const res = await axiosInstance.get('/user/get-all-students');
         return res.data;
     };
 
@@ -126,7 +126,6 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
             transitionProps={{ transition: 'scale-y' }}
             top={30}
             closeOnClickOutside={false}
-            withCloseButton={false}
         >
             {/* {isLoading && (
                 <div className='flex justify-center items-center h-full'>

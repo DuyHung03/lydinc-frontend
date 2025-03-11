@@ -17,9 +17,9 @@ function Admin() {
 
     return (
         <div className='w-full flex justify-center items-center'>
-            <div className='w-1200 py-4'>
+            <div className='max-w-1200 w-full md:px-4 py-4'>
                 <p className='font-semibold text-2xl mb-6'>Choose option:</p>
-                <div className='grid grid-cols-3'>
+                <div className='grid grid-cols-1 lg:grid-cols-3 gap-3'>
                     {options.map((option, index) => (
                         <div className='w-fit' key={index}>
                             <Link to={`${option.path}`}>

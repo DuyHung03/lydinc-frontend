@@ -32,7 +32,7 @@ function Student() {
 
     return (
         <div className='w-full flex justify-center items-center'>
-            <div className='w-1200 py-4'>
+            <div className='w-full max-w-1200 lg:w-1200 py-4 px-4 lg:px-0'>
                 <div className='mb-6'>
                     <p className='font-semibold text-2xl mb-3'>My courses</p>
                     <hr />
@@ -47,10 +47,14 @@ function Student() {
                         {error.message || 'An error occured'}
                     </Alert>
                 )}
-                <div className='w-full grid grid-cols-3 gap-7'>
+                <div className='w-full grid grid-cols-2 lg:grid-cols-3 gap-7'>
                     {courses &&
                         courses?.map((course) => (
-                            <Link key={course.courseId} to={`/student/course/${course.courseId}/`}>
+                            <Link
+                                key={course.courseId}
+                                to={`/landing/course/${course.courseId}`}
+                                state={course}
+                            >
                                 <CourseItem course={course} />
                             </Link>
                         ))}

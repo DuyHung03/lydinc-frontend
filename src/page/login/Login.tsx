@@ -61,7 +61,7 @@ function Login() {
     return (
         <>
             <ToastContainer />
-            <div className='grid grid-cols-2 md:grid-cols- h-screen w-screen'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 md:grid-cols- h-screen w-screen'>
                 <div className='flex flex-col justify-center items-center bg-bg-login bg-no-repeat bg-contain'>
                     <img src={logo} alt='logo' className='w-1/2 h-fit' />
 
@@ -155,7 +155,7 @@ function Login() {
                         )}
                     </form>
                 </div>
-                <div className='relative w-full h-full'>
+                <div className='relative w-full h-full hidden lg:block'>
                     <video className='w-full h-screen object-cover-l-3xl' autoPlay loop muted>
                         <source
                             src='https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/Ch%C6%B0a%20c%C3%B3%20t%C3%AAn%20(1080%20x%201920%20px).mp4?alt=media&token=f0bd987c-8575-409b-993d-e65ac15037b5'

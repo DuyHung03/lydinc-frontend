@@ -9,7 +9,7 @@ function Header() {
 
     return (
         <div
-            className='flex justify-between align-middle bg-white h-headerHeight w-screen px-10 z-50'
+            className='flex justify-between align-middle bg-white h-headerHeight w-screen px-10 gap-4 z-50'
             style={{ borderBottom: '1px solid #e0e0e0' }}
         >
             <a href='/' className='h-full flex items-center'>

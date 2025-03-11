@@ -50,16 +50,16 @@ function Home() {
                     <div className='w-1200'></div>
                 </div> */}
                 <div className='flex flex-col gap-8 justify-center items-center bg-bg-zebra bg-no-repeat bg-cover p-8'>
-                    <div className='w-1200 '>
+                    <div className=''>
                         <p className='font-bold mb-2 text-black text-xl'>Introduction:</p>
-                        <div>
+                        <div className='text-wrap'>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima numquam
                             eos consectetur ut, deleniti deserunt voluptatum qui dolores est
                             voluptates facilis? Sapiente, tempora voluptatem magnam architecto error
                             nobis ipsum sequi.
                         </div>
                     </div>
-                    <div className='w-1200 '>
+                    <div className=' '>
                         <p className='font-bold mb-2 text-black text-xl'>Introduction:</p>
                         <div>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima numquam

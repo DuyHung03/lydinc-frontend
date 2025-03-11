@@ -12,7 +12,7 @@ function CourseDetails() {
     const [isLoading, setIsLoading] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-
+    const [errors, setErrors] = useState<string>('');
     const { data } = useFetchingModules(Number(courseId));
     const parentModule = location.state?.parentModule as Module | null;
     const childModule = location.state?.childModule as Module | null;
@@ -29,7 +29,7 @@ function CourseDetails() {
 
             if (firstParentModule && childLesson) {
                 navigate(
-                    `/student/course/${courseId}/${encodeURIComponent(
+                    `/learning/course/${courseId}/${encodeURIComponent(
                         firstParentModule.moduleTitle
                     )}/${encodeURIComponent(childLesson.moduleTitle)}`,
                     {
@@ -68,16 +68,12 @@ function CourseDetails() {
 
                 window.open(res.data, '_blank');
             } else {
-                <Alert title='Error' color='red'>
-                    File not found!
-                </Alert>;
+                setErrors('File not found!.');
                 console.error('Error fetching practice link');
             }
         } catch (error) {
             console.error('Failed to get practice link:', error);
-            <Alert title='Error' color='red'>
-                Something went wrong!.
-            </Alert>;
+            setErrors('Something went wrong!.');
         } finally {
             setIsLoading(false);
         }
@@ -141,6 +137,11 @@ function CourseDetails() {
                 <div className='w-full text-center italic text-gray-600'>
                     Lesson's data is empty!
                 </div>
+            )}
+            {errors && (
+                <Alert title='Error' color='red'>
+                    {errors}
+                </Alert>
             )}
         </div>
     );

@@ -32,12 +32,12 @@ const Lecturer = () => {
 
     return (
         <div className='w-full flex justify-center items-center'>
-            <div className='w-1200 p-4'>
+            <div className='lg:w-1200 p-4'>
                 <h1 className='font-semibold mb-4 text-xl'>Recent courses:</h1>
                 <hr />
                 {data?.data && (
                     <>
-                        <div className='w-full grid grid-cols-3 gap-7 mt-6'>
+                        <div className='w-full grid grid-cols-2 lg:grid-cols-3 gap-7 mt-6'>
                             <div className='flex flex-col w-full justify-center items-center gap-1'>
                                 <Link to='/lecturer/new-course'>
                                     <button className='p-14 border border-primary border-dashed hover:bg-gray-200 duration-150'>

@@ -9,6 +9,7 @@ import CourseStructure from '../page/course-structure/CourseStructure';
 import EditCourse from '../page/edit-course/EditCourse';
 import Forbiden from '../page/forbiden/Forbiden';
 import Home from '../page/home/Home';
+import LandingCourse from '../page/landing-course/LandingCourse';
 import Lecturer from '../page/lecturer/Lecturer';
 import Login from '../page/login/Login';
 import ManageUniversity from '../page/manage-uni/ManageUniversity';
@@ -116,12 +117,22 @@ export const studentRoutes: RouteObject[] = [
         ],
     },
     {
-        path: 'student/course',
+        path: 'learning/course',
         element: <CourseLayout />,
         children: [
             {
                 path: ':courseId/:module?/:lesson?',
                 element: <ProtectedRoute element={<CourseDetails />} allowedRoles={['STUDENT']} />,
+            },
+        ],
+    },
+    {
+        path: 'landing/course/:courseId',
+        element: <MainLayout />,
+        children: [
+            {
+                index: true,
+                element: <ProtectedRoute element={<LandingCourse />} allowedRoles={['STUDENT']} />,
             },
         ],
     },

@@ -19,7 +19,7 @@ function ManageUniversity() {
     };
     return (
         <div className='w-full flex justify-center items-center'>
-            <div className='w-9/12 p-4'>
+            <div className='w-full lg:w-9/12 p-4'>
                 <PageHeader title='Univeristies' />
                 <button
                     className='primary-btn flex items-center justify-center gap-3 mb-6 text-sm'
@@ -98,7 +98,7 @@ function ManageUniversity() {
                                         {university.studentCount}
                                     </td>
                                     {/* Actions Column with Tooltip */}
-                                    <td className='px-6 py-4 text-center align-middle'>
+                                    <td className='px-6 py-4 text-center align-middle text-nowrap'>
                                         <Tooltip
                                             transitionProps={{ duration: 200, enterDelay: 200 }}
                                             color='gray'

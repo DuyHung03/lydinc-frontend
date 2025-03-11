@@ -87,7 +87,7 @@ function StudenDataTable({
     };
 
     return (
-        <div className='w-full max-w-full'>
+        <div className='w-full max-w-full overflow-x-auto'>
             {students.length > 0 && (
                 <>
                     <label
@@ -111,7 +111,7 @@ function StudenDataTable({
                     </select>
 
                     <h2 className='text-xl font-semibold text-gray-800 mb-2'>Student Accounts</h2>
-                    <table className='w-full mt-4 border'>
+                    <table className='w-full mt-4 border table-auto'>
                         <thead>
                             <tr className='bg-stone-200'>
                                 {Object.keys(students[0]).map((key) => (

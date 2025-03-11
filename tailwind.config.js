@@ -10,6 +10,7 @@ module.exports = {
                 316: '316px',
                 1200: '1200px',
                 760: '760px',
+                860: '860px',
                 sidebar: '102px',
                 primaryBtn: '110px',
             },

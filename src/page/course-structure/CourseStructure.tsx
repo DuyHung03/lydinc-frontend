@@ -13,6 +13,7 @@ import { useFetchingModules } from '../../hook/useFetchingModules';
 import axiosInstance from '../../network/httpRequest';
 import useAuthStore from '../../store/useAuthStore';
 import { Module } from '../../types/types';
+import ThumbnailUpload from './ThumbnailUpload';
 
 const moduleSchema = z.object({
     moduleTitle: z.string().min(4, 'Title must be at least 4 characters'),
@@ -20,6 +21,7 @@ const moduleSchema = z.object({
 
 const courseTitleSchema = z.object({
     courseTitle: z.string().min(4, 'Course title must be at least 4 characters'),
+    courseDescription: z.string().min(10, 'Course description must be at least 10 characters'),
 });
 
 function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
@@ -28,11 +30,13 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
     const { courseId } = useParams();
     const [modules, setModules] = useState<Module[]>([]);
     const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [privacyModalOpen, setPrivacyModalOpen] = useState<boolean>(false);
     const queryClient = useQueryClient();
     const { data } = useFetchingModules(Number(courseId));
+    const [thumbnail, setThumbnail] = useState<string | undefined>(data?.thumbnail);
 
     const recalculateIndexes = (modules: Module[]): Module[] => {
         let moduleIndex = 1;
@@ -64,16 +68,23 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
             if (data) {
                 setModules(data.modules);
                 setTitle(data.courseTitle);
+                setDescription(data.description);
+                setThumbnail(data.thumbnail);
             }
         }
     }, [mode, courseId, data]);
 
     const validateTitleInput = (): boolean => {
         const newErrors: Record<string, string> = {};
-        const result = courseTitleSchema.safeParse({ courseTitle: title });
+        const result = courseTitleSchema.safeParse({
+            courseTitle: title,
+            courseDescription: description,
+        });
 
         if (!result.success) {
-            newErrors['courseTitle'] = result.error.errors[0].message;
+            result.error.errors.forEach((err) => {
+                newErrors[err.path[0]] = err.message;
+            });
         }
 
         if (modules.length <= 0) {
@@ -187,6 +198,8 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
                 {
                     title,
                     lecturerId: user?.userId,
+                    description,
+                    thumbnail,
                     modules,
                 },
                 {
@@ -226,6 +239,8 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
         const changes = {
             courseId,
             title,
+            description,
+            thumbnail,
             modules: updatedModules,
         };
 
@@ -256,12 +271,10 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
         }
     };
 
-    useEffect(() => {
-        console.log('Modules updated:', modules);
-    }, [modules]);
+    console.log(data);
 
     return (
-        <div className='w-full flex flex-col py-5 justify-center items-center'>
+        <div className='w-full flex flex-col py-5 px-4 lg:px-0 justify-center items-center'>
             <ToastContainer limit={1} style={{ marginTop: '80px' }} autoClose={2000} />
             <LoadingOverlay visible={isLoading} />
             <PrivacyModal
@@ -289,7 +302,7 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
                 </Alert>
             </div>
             <div
-                className='w-1200 p-4 rounded-md mt-5'
+                className='w-full lg:w-1200 p-4 rounded-md mt-5'
                 style={{
                     boxShadow:
                         'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
@@ -324,43 +337,70 @@ function CourseStructure({ mode }: { mode: 'create' | 'edit' }) {
                     </div>
                 </div>
                 <Divider w={'100%'} my={12} />
-                <div>
-                    <label
-                        htmlFor='title'
-                        className="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:text-red-500 after:ml-0.5"
-                    >
-                        Course's title
-                    </label>
-                    <input
-                        id='title'
-                        type='text'
-                        value={title}
-                        onChange={(e) => {
-                            setTitle(e.target.value);
-                            setErrors((prev) => ({ ...prev, ['courseTitle']: '' }));
-                        }}
-                        placeholder='Enter your title'
-                        className='block w-full px-4 py-3 border border-gray-300 shadow-sm sm:text-sm'
-                    />
-                    {errors['courseTitle'] && (
-                        <p className='text-red-500 text-sm mt-1'>{errors['courseTitle']}</p>
-                    )}
-                </div>
-                <div>
-                    <ModuleList
-                        modules={modules}
-                        errors={errors}
-                        onChangeTitle={onChangeTitle}
-                        addLesson={addLesson}
-                        deleteModule={deleteModule}
-                    />
-                    <button
-                        type='button'
-                        onClick={addModule}
-                        className='bg-blue-500 hover:bg-blue-600 mt-4 px-4 py-2 text-sm text-white'
-                    >
-                        Add module
-                    </button>
+                <div className='flex flex-col justify-center items-center gap-6 w-full'>
+                    <div className='w-full'>
+                        <label
+                            htmlFor='title'
+                            className="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:text-red-500 after:ml-0.5"
+                        >
+                            Course's title
+                        </label>
+                        <input
+                            id='title'
+                            type='text'
+                            value={title}
+                            onChange={(e) => {
+                                setTitle(e.target.value);
+                                setErrors((prev) => ({ ...prev, ['courseTitle']: '' }));
+                            }}
+                            placeholder='Enter your title'
+                            className='block w-full px-4 py-3 border border-gray-300 shadow-sm sm:text-sm'
+                        />
+                        {errors['courseTitle'] && (
+                            <p className='text-red-500 text-sm mt-1'>{errors['courseTitle']}</p>
+                        )}
+                    </div>
+                    <div className='w-full'>
+                        <label
+                            htmlFor='description'
+                            className="block text-sm font-medium text-gray-700 mb-1 after:content-['*'] after:text-red-500 after:ml-0.5"
+                        >
+                            Course's description
+                        </label>
+                        <textarea
+                            id='description'
+                            value={description}
+                            rows={5}
+                            onChange={(e) => {
+                                setDescription(e.target.value);
+                                setErrors((prev) => ({ ...prev, ['courseDescription']: '' }));
+                            }}
+                            placeholder='Enter your description'
+                            className='block w-full px-4 py-3 border border-gray-300 shadow-sm sm:text-sm'
+                        />
+                        {errors['courseDescription'] && (
+                            <p className='text-red-500 text-sm mt-1'>
+                                {errors['courseDescription']}
+                            </p>
+                        )}
+                    </div>
+                    <ThumbnailUpload setThumbnail={setThumbnail} thumb={thumbnail} />
+                    <div className='w-full'>
+                        <ModuleList
+                            modules={modules}
+                            errors={errors}
+                            onChangeTitle={onChangeTitle}
+                            addLesson={addLesson}
+                            deleteModule={deleteModule}
+                        />
+                        <button
+                            type='button'
+                            onClick={addModule}
+                            className='bg-blue-500 hover:bg-blue-600 mt-4 px-4 py-2 text-sm text-white'
+                        >
+                            Add module
+                        </button>
+                    </div>
                 </div>
                 <hr className='w-full my-6' />
                 {isLoading ? (

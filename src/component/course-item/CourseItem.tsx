@@ -5,12 +5,25 @@ import fallback from '../../assets/course-fallback.jpeg';
 import { Course } from '../../types/types';
 function CourseItem({ course }: { course: Course }) {
     return (
-        <div className='w-full rounded-lg shadow-xl'>
-            <img
-                src={course.image || fallback}
-                className='w-full h-44 rounded-t-lg object-cover'
-                alt=''
-            />
+        <div
+            className='w-full rounded-lg'
+            style={{
+                boxShadow:
+                    'rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em',
+            }}
+        >
+            {course.thumbnail ? (
+                <iframe
+                    src={course.thumbnail}
+                    className='w-full h-44 rounded-t-lg object-contain '
+                ></iframe>
+            ) : (
+                <img
+                    src={course.thumbnail || fallback}
+                    className='w-full h-44 rounded-t-lg object-cover'
+                    alt=''
+                />
+            )}
             <div className='p-4' style={{ background: '#FAFAFA' }}>
                 <p className='font-semibold  mb-4 text-black text-base overflow-ellipsis overflow-hidden text-nowrap'>
                     {course.title}

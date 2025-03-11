@@ -18,6 +18,8 @@ export type Course = {
     enrollmentDate: string;
     status: string | null;
     privacy: string;
+    description: string;
+    thumbnail: string;
     image: string | null;
     lecturerId: string | null;
     lecturerName: string | null;
@@ -62,6 +64,8 @@ export type StudentAccount = {
 export type ModulesResponse = {
     courseId: number;
     courseTitle: string;
+    description: string;
+    thumbnail: string;
     modules: Module[];
 };
 

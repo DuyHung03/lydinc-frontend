@@ -19,7 +19,7 @@ function SideBar() {
     };
 
     return (
-        <div className='max-w-96 w-96 px-4 py-8 flex flex-col'>
+        <div className='w-96 lg:mt-headerHeight bg-white px-4 py-8 flex flex-col'>
             {pathname.includes('/edit-course') && (
                 <>
                     <Link
