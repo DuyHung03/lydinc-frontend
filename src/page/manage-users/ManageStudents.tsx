@@ -9,7 +9,7 @@ import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
 import axiosInstance from '../../network/httpRequest';
 import { PaginationResponse, University, User } from '../../types/types';
 
-function ManageUsers() {
+function ManageStudents() {
     const [pageNo, setPageNo] = useState(1);
     const [selectedUniversity, setSelectedUniversity] = useState<number>();
     const [order, setOrder] = useState<number>(1);
@@ -17,8 +17,8 @@ function ManageUsers() {
 
     const searchDebounce = useDebounce(searchValue, 800);
 
-    const getUsers = async () => {
-        const res = await axiosInstance.get('user/get-all', {
+    const getStudents = async () => {
+        const res = await axiosInstance.get('admin/get-all-students', {
             params: {
                 searchValue: searchDebounce != '' ? searchDebounce : null,
                 universityId: selectedUniversity ? selectedUniversity : null,
@@ -31,28 +31,25 @@ function ManageUsers() {
     };
 
     const { data, isLoading, error } = useQuery<PaginationResponse<User>>({
-        queryKey: ['users', pageNo, selectedUniversity, order, searchDebounce],
-        queryFn: getUsers,
+        queryKey: ['students', pageNo, selectedUniversity, order, searchDebounce],
+        queryFn: getStudents,
         gcTime: 300000,
     });
 
     const { data: universities } = useFetchingUniversities();
 
-    console.log(searchDebounce != null);
-
     return (
         <div className='w-full flex justify-center items-center'>
             <div className='w-full lg:w-1200 p-4'>
-                <PageHeader title='Manage Users' />
+                <PageHeader title='Manage Students' />
 
-                <div className='w-fit'>
-                    <Link to={'/admin/new-user'}>
-                        <button className='primary-btn mb-5 flex gap-3 justify-center items-center'>
-                            <PersonAdd fontSize='small' />
-                            <p className='text-sm'>Create new account</p>
-                        </button>
-                    </Link>
-                </div>
+                <Link to={'/admin/new-student'}>
+                    <button className='primary-btn mb-5 flex gap-3 justify-center items-center'>
+                        <PersonAdd fontSize='small' />
+                        <p className='text-sm'>Create new Student account</p>
+                    </button>
+                </Link>
+
                 {/* Filter */}
                 <div className='flex justify-between items-center gap-6 my-4'>
                     <div className='flex justify-start items-center gap-6'>
@@ -223,4 +220,4 @@ function ManageUsers() {
     );
 }
 
-export default ManageUsers;
+export default ManageStudents;

@@ -87,7 +87,7 @@ function ChangePassword() {
 
     return (
         <div className='w-full max-h-screen flex justify-center items-center'>
-            <div className='w-1200 grid grid-cols-2'>
+            <div className='w-1200 grid grid-cols-1 lg:grid-cols-2'>
                 <div className='w-full gap-4 flex flex-col justify-center items-center'>
                     <div className='w-full flex items-center justify-center'>
                         <img src={logo} className='w-48' alt='logo' />
@@ -183,7 +183,7 @@ function ChangePassword() {
                         </button>
                     </form>
                 </div>
-                <div className='w-full flex justify-center items-center'>
+                <div className='hidden lg:flex w-full justify-center items-center'>
                     <img
                         className='w-full max-w-lg'
                         src='https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/computer-security-with-login-password-padlock.jpg?alt=media&token=d44d297d-c257-4436-a70f-48f3d83d7057'

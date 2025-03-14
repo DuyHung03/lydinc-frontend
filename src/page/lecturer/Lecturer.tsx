@@ -14,7 +14,7 @@ const Lecturer = () => {
         const res = await axiosInstance.get('/courses/courses-by-lecturer', {
             params: {
                 pageNo: pageNo - 1,
-                pageSize: 11,
+                pageSize: 5,
             },
         });
         return res.data;

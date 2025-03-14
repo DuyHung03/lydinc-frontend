@@ -13,8 +13,10 @@ import LandingCourse from '../page/landing-course/LandingCourse';
 import Lecturer from '../page/lecturer/Lecturer';
 import Login from '../page/login/Login';
 import ManageUniversity from '../page/manage-uni/ManageUniversity';
-import ManageUsers from '../page/manage-users/ManageUsers';
-import NewUser from '../page/new-user/NewUser';
+import ManageLecturers from '../page/manage-users/ManageLecturers';
+import ManageStudents from '../page/manage-users/ManageStudents';
+import NewLecturer from '../page/new-user/NewLecturer';
+import NewStudent from '../page/new-user/NewStudent';
 import PageNotFound from '../page/not-found/PageNotFound';
 import Register from '../page/register/Register';
 import StudentUpload from '../page/student-upload/StudentUpload';
@@ -151,15 +153,23 @@ export const adminRoutes: RouteObject[] = [
                 element: <ProtectedRoute element={<ManageUniversity />} allowedRoles={['ADMIN']} />,
             },
             {
-                path: 'manage-users',
-                element: <ProtectedRoute element={<ManageUsers />} allowedRoles={['ADMIN']} />,
+                path: 'manage-lecturers',
+                element: <ProtectedRoute element={<ManageLecturers />} allowedRoles={['ADMIN']} />,
             },
             {
-                path: 'new-user',
-                element: <ProtectedRoute element={<NewUser />} allowedRoles={['ADMIN']} />,
+                path: 'manage-students',
+                element: <ProtectedRoute element={<ManageStudents />} allowedRoles={['ADMIN']} />,
             },
             {
-                path: 'new-user/upload',
+                path: 'new-lecturer',
+                element: <ProtectedRoute element={<NewLecturer />} allowedRoles={['ADMIN']} />,
+            },
+            {
+                path: 'new-student',
+                element: <ProtectedRoute element={<NewStudent />} allowedRoles={['ADMIN']} />,
+            },
+            {
+                path: 'new-student/upload',
                 element: <ProtectedRoute element={<StudentUpload />} allowedRoles={['ADMIN']} />,
             },
             {

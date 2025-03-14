@@ -42,7 +42,7 @@ function PrivacyModal({ courseId, opened, closeModal }: PrivacyModalProps) {
     const { data: universities } = useFetchingUniversities();
 
     const fetchStudents = async () => {
-        const res = await axiosInstance.get('/user/get-all-students');
+        const res = await axiosInstance.get('/user/get-all-external-students');
         return res.data;
     };
 

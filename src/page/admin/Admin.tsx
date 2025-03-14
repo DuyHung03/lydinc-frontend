@@ -9,15 +9,20 @@ function Admin() {
             path: 'universities',
         },
         {
-            title: 'Manage users',
+            title: 'Manage student',
             icon: 'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/teamwork.png?alt=media&token=3bec9d18-4855-4c78-830b-176e66565e3b',
-            path: 'manage-users',
+            path: 'manage-students',
+        },
+        {
+            title: 'Manage lecturer',
+            icon: 'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lecture.png?alt=media&token=155b0487-9507-472f-bcd2-32cb16c86a44',
+            path: 'manage-lecturers',
         },
     ];
 
     return (
         <div className='w-full flex justify-center items-center'>
-            <div className='max-w-1200 w-full md:px-4 py-4'>
+            <div className='w-full lg:w-1200 md:px-4 py-4'>
                 <p className='font-semibold text-2xl mb-6'>Choose option:</p>
                 <div className='grid grid-cols-1 lg:grid-cols-3 gap-3'>
                     {options.map((option, index) => (

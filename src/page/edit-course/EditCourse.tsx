@@ -1,4 +1,4 @@
-import { Tooltip } from '@mantine/core';
+import { Alert, Tooltip } from '@mantine/core';
 import { AddPhotoAlternate, Delete, FormatSize, VideoCall } from '@mui/icons-material';
 import { arrayMoveImmutable } from 'array-move';
 import { useEffect, useState } from 'react';
@@ -22,16 +22,16 @@ function EditCourse() {
     const [components, setComponents] = useState<Lesson[]>([]);
     const { data } = useFetchingModules(Number(courseId));
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const module = location.state as Module | null;
+    const parentModule = location.state?.parentModule as Module | null;
+    const childModule = location.state?.childModule as Module | null;
     const navigate = useNavigate();
-    console.log(module);
 
     const {
         data: lessonData,
         // isLoading,
         isError,
         error,
-    } = useFetchLessonData({ module, courseId: Number(courseId) });
+    } = useFetchLessonData({ module: childModule, courseId: Number(courseId) });
 
     function validateLessonData() {
         const newErrors: Record<string, string> = {};
@@ -54,7 +54,7 @@ function EditCourse() {
     }, [lessonData, setComponents]);
 
     useEffect(() => {
-        if (!module && data?.modules?.length) {
+        if (!childModule && data?.modules?.length) {
             const firstParentModule = data.modules.find((mod) => mod.level === 0);
             const childLesson = firstParentModule
                 ? data.modules.find((mod) => mod.parentModuleId === firstParentModule.moduleId)
@@ -63,11 +63,14 @@ function EditCourse() {
             if (childLesson) {
                 navigate(
                     `/lecturer/course/edit-course/${courseId}/${firstParentModule?.moduleTitle}/${childLesson.moduleTitle}`,
-                    { state: childLesson, replace: true }
+                    {
+                        state: { parentModule: firstParentModule, childModule: childLesson },
+                        replace: true,
+                    }
                 );
             }
         }
-    }, [data, module, courseId, navigate]);
+    }, [data, courseId, navigate, childModule]);
 
     const addComponent = (type: number) => {
         setComponents((prev) => [
@@ -119,7 +122,7 @@ function EditCourse() {
         if (isValid) {
             const res = await axiosInstance.post('/lesson/update-data', components, {
                 params: {
-                    moduleId: module!.moduleId,
+                    moduleId: childModule?.moduleId,
                 },
             });
             if (res.status === 200) {
@@ -138,10 +141,28 @@ function EditCourse() {
             <div className='w-full lg:w-860'>
                 {/* {isLoading && <LoadingOverlay visible />} */}
                 <div className='w-full flex flex-col justify-center items-center'>
-                    <p className='w-full font-semibold text-2xl text-red-800'>
-                        {module?.moduleTitle}
-                    </p>
-                    {isError && <p className='text-red-500'>{error.message}</p>}
+                    <div className='w-full flex justify-between items-center gap-8'>
+                        <p className='grow font-semibold text-2xl text-red-800'>
+                            {childModule?.moduleTitle}
+                        </p>
+                        <div className='flex flex-col justify-center items-end italic'>
+                            <p>
+                                Course ID: <strong>{courseId}</strong>
+                            </p>
+                            <p>
+                                Module ID: <strong>{parentModule?.index}</strong>
+                            </p>
+                            <p>
+                                Lesson ID:{' '}
+                                <strong>{`${parentModule?.index}.${childModule?.index}`}</strong>
+                            </p>
+                        </div>
+                    </div>
+                    {isError && (
+                        <Alert w={'100%'} title='Error' color='red'>
+                            {error.message}
+                        </Alert>
+                    )}
                     <hr className='w-full my-6 h-0.5' />
                 </div>
                 {components.length <= 0 && (
@@ -149,7 +170,7 @@ function EditCourse() {
                         <p className='text-center font-light italic'>Lesson's data is empty!</p>
                     </div>
                 )}
-                <div className='fixed flex flex-col right-8 top-28 p-4 text-gray-500 bg-white shadow-2xl border dura border-gray-300 rounded-2xl'>
+                <div className='fixed flex flex-col right-8 top-1/2 p-4 text-gray-500 bg-white shadow-2xl border dura border-gray-300 rounded-2xl'>
                     <Tooltip label='Add Text' openDelay={1000} bg={'gray'}>
                         <button
                             onClick={() => addComponent(1)}
