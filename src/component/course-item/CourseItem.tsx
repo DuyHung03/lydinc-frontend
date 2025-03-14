@@ -1,7 +1,6 @@
 import { Avatar } from '@mantine/core';
 import { Lock, Public } from '@mui/icons-material';
 import clsx from 'clsx';
-import fallback from '../../assets/course-fallback.jpeg';
 import { Course } from '../../types/types';
 function CourseItem({ course }: { course: Course }) {
     return (
@@ -19,7 +18,10 @@ function CourseItem({ course }: { course: Course }) {
                 ></iframe>
             ) : (
                 <img
-                    src={course.thumbnail || fallback}
+                    src={
+                        course.thumbnail ||
+                        'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Fcourse-fallback.jpeg?alt=media&token=3afa227a-f1a8-4fec-89d4-e2688f7acb8f'
+                    }
                     className='w-full h-44 rounded-t-lg object-cover'
                     alt=''
                 />

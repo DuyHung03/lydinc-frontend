@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { z } from 'zod';
-import logo from '../../assets/logo_1.png';
 import axiosInstance from '../../network/httpRequest';
 
 const changePasswordSchema = z
@@ -90,7 +89,13 @@ function ChangePassword() {
             <div className='w-1200 grid grid-cols-1 lg:grid-cols-2'>
                 <div className='w-full gap-4 flex flex-col justify-center items-center'>
                     <div className='w-full flex items-center justify-center'>
-                        <img src={logo} className='w-48' alt='logo' />
+                        <img
+                            src={
+                                'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Flogo_1.png?alt=media&token=3220d663-6343-4966-9b48-0735e9161d1d'
+                            }
+                            className='w-48'
+                            alt='logo'
+                        />
                     </div>
                     <h1 className='text-xl font-semibold text-primary'>Change your password</h1>
 

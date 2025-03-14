@@ -1,6 +1,5 @@
 import { ArrowBackIosNewOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/logo_3.png';
 
 function CourseHeader() {
     const navigate = useNavigate();
@@ -17,7 +16,13 @@ function CourseHeader() {
                     <ArrowBackIosNewOutlined fontSize='small' htmlColor='#fff' />
                 </button>
                 <a href='/'>
-                    <img src={logo} alt='logo' className='w-60' />
+                    <img
+                        src={
+                            'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Flogo_3.png?alt=media&token=175c10fb-f591-4bf3-9661-351d011d87aa'
+                        }
+                        alt='logo'
+                        className='w-60'
+                    />
                 </a>
             </div>
         </header>

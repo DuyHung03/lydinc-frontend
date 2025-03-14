@@ -4,7 +4,6 @@ import { useDropzone } from 'react-dropzone';
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
-import excel from '../../assets/excel.png';
 import PageHeader from '../../component/page-header/PageHeader';
 import StudenDataTable from '../../component/student-data-table/StudenDataTable';
 import { StudentAccount } from '../../types/types';
@@ -81,7 +80,13 @@ const StudentUpload = () => {
                             }}
                         >
                             <div className='flex justify-center items-center gap-3'>
-                                <img className='w-6' src={excel} alt='' />
+                                <img
+                                    className='w-6'
+                                    src={
+                                        'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Fexcel.png?alt=media&token=14fd8d90-825b-48b7-aee2-bcc9a4d9b2d6'
+                                    }
+                                    alt=''
+                                />
                                 <p className='text-gray-700'>{file.name}</p>
                             </div>
                             <p className='text-gray-500 text-sm'>Size: {formatBytes(file.size)}</p>

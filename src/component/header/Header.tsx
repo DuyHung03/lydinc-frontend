@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import logo from '../../assets/logo_2.png';
 import useAuthStore from '../../store/useAuthStore';
 import HeaderMenu from '../header-menu/HeaderMenu';
 import HeaderUserMenu from '../header-user/HeaderUserMenu';
@@ -13,7 +12,13 @@ function Header() {
             style={{ borderBottom: '1px solid #e0e0e0' }}
         >
             <a href='/' className='h-full flex items-center'>
-                <img src={logo} alt='logo' className='w-316' />
+                <img
+                    src={
+                        'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Flogo_2.png?alt=media&token=190f164c-27dc-4735-8d57-bf452cdfcdf3'
+                    }
+                    alt='logo'
+                    className='w-316'
+                />
             </a>
 
             <HeaderMenu />

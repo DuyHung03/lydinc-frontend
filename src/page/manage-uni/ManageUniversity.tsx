@@ -2,7 +2,6 @@ import { Alert, Loader, Modal, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Add, Delete, Edit, RemoveRedEye } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import fallback from '../../assets/course-fallback.jpeg';
 import PageHeader from '../../component/page-header/PageHeader';
 import { useFetchingUniversities } from '../../hook/useFetchingUniversities';
 import NewUniversity from '../new-uni/NewUniversity';
@@ -70,7 +69,10 @@ function ManageUniversity() {
                                     >
                                         <td className='border-gray-300 border-r border-solid cursor-pointer px-6 py-4 text-center gap-3 flex justify-center items-center '>
                                             <img
-                                                src={university.logo || fallback}
+                                                src={
+                                                    university.logo ||
+                                                    'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Fcourse-fallback.jpeg?alt=media&token=3afa227a-f1a8-4fec-89d4-e2688f7acb8f'
+                                                }
                                                 className='w-8'
                                                 alt=''
                                             />

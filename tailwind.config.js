@@ -22,8 +22,10 @@ module.exports = {
                 headerHeight: '76px',
             },
             backgroundImage: {
-                'bg-login': "url('./src/assets/bg-flip.png')",
-                'bg-zebra': "url('./src/assets/bg-zebra.avif')",
+                'bg-login':
+                    "url('https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Fbg-flip.png?alt=media&token=07e0b420-920a-48a6-8250-f089f6d12915')",
+                'bg-zebra':
+                    "url('https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Fbg-zebra.avif?alt=media&token=ccbacae5-f93c-4d18-9e23-7ff5c1af12df')",
             },
         },
     },

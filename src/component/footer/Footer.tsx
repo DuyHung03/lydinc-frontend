@@ -1,5 +1,4 @@
 import { Email, Phone, Place } from '@mui/icons-material';
-import logo from '../../assets/logo_1.png';
 function Footer() {
     return (
         <div className='flex flex-col border-t border-primary border-solid bg-white'>
@@ -7,7 +6,13 @@ function Footer() {
                 <div className='grid grid-cols-3 w-1200 justify-between gap-4 py-4 '>
                     <div className='flex flex-col gap-4 justify-start'>
                         <div className='flex items-center justify-center'>
-                            <img src={logo} alt='logo' className='w-40' />
+                            <img
+                                src={
+                                    'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Flogo_1.png?alt=media&token=3220d663-6343-4966-9b48-0735e9161d1d'
+                                }
+                                alt='logo'
+                                className='w-40'
+                            />
                         </div>
                         <p className='text-sm'>
                             Established in 2016, LYDINC Vision is to found a leading network of

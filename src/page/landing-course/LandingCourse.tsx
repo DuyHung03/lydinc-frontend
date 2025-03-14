@@ -1,6 +1,5 @@
 import { NavLink } from '@mantine/core';
 import { Link, useLocation } from 'react-router-dom';
-import fallback from '../../assets/course-fallback.jpeg';
 import PageHeader from '../../component/page-header/PageHeader';
 import { useFetchingModules } from '../../hook/useFetchingModules';
 import { Course, Module } from '../../types/types';
@@ -65,7 +64,13 @@ function LandingCourse() {
                                 className='w-full rounded-xl h-56'
                             ></iframe>
                         ) : (
-                            <img src={fallback} className='rounded-xl' alt='' />
+                            <img
+                                src={
+                                    'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Fcourse-fallback.jpeg?alt=media&token=3afa227a-f1a8-4fec-89d4-e2688f7acb8f'
+                                }
+                                className='rounded-xl'
+                                alt=''
+                            />
                         )}
                         <Link
                             to={`/learning/course/${course.courseId}`}

@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { z } from 'zod';
-import logo from '../../assets/logo_2.png';
 import ResetPasswordModal from '../../component/reset-pw-modal/ResetPasswordModal';
 import axiosInstance from '../../network/httpRequest';
 const loginSchema = z.object({
@@ -63,7 +62,13 @@ function Login() {
             <ToastContainer />
             <div className='grid grid-cols-1 lg:grid-cols-2 md:grid-cols- h-screen w-screen'>
                 <div className='flex flex-col justify-center items-center bg-bg-login bg-no-repeat bg-contain'>
-                    <img src={logo} alt='logo' className='w-1/2 h-fit' />
+                    <img
+                        src={
+                            'https://firebasestorage.googleapis.com/v0/b/chat-app-1000a.appspot.com/o/lydinc%2Flogo_2.png?alt=media&token=190f164c-27dc-4735-8d57-bf452cdfcdf3'
+                        }
+                        alt='logo'
+                        className='w-1/2 h-fit'
+                    />
 
                     <p className='m-2 text-primary font-semibold text-2xl uppercase'>
                         welcome to lydinc qa learning!
