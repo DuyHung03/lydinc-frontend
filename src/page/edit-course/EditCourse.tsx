@@ -10,7 +10,6 @@ import DocumentsUpload from '../../component/documents-upload/DocumentsUpload';
 import Image from '../../component/edit-lesson/Image';
 import Text from '../../component/edit-lesson/Text';
 import Video from '../../component/edit-lesson/Video';
-import '../../component/editor/Editor.scss';
 import { useFetchingModules } from '../../hook/useFetchingModules';
 import { useFetchLessonData } from '../../hook/useFetchLessonData';
 import axiosInstance from '../../network/httpRequest';
