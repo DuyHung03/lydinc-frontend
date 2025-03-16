@@ -47,7 +47,7 @@ const NewStudent = () => {
         console.log('Form Data:', data);
         try {
             setLoading(true);
-            const res = await axiosInstance.post('/admin/create-account', data);
+            const res = await axiosInstance.post('/admin/create-account', [data]);
             if (res.status === 200) {
                 navigate(-1);
             }
