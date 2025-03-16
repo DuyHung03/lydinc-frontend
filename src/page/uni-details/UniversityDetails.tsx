@@ -53,7 +53,7 @@ function UniversityDetails() {
                     <div className='w-full flex items-center justify-between mb-3'>
                         <h2 className='text-xl font-semibold text-gray-800 mb-4'>{`Accounts (${students?.length})`}</h2>
                         <Link
-                            to={'/admin/new-user'}
+                            to={'/admin/new-student'}
                             className='primary-btn flex items-center justify-center gap-2'
                             state={university}
                         >
